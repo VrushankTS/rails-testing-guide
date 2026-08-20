@@ -2,3 +2,12 @@ site_name: Rails Testing Guide
 
 theme:
   name: material
+
+nav:
+  - Home: index.md
+  - 1. Testing Environment & Setup: 01-testing-environment.md
+  - 2. Unit Testing in Rails: 02-unit-testing.md
+  - 3. Integration Testing in Rails: 03-integration-testing.md
+  - 4. Background Job / Worker Testing: 04-background-jobs.md
+  - 5. System / End-to-End Testing: 05-system-testing.md
+  - 6. Rails-Specific Testing Patterns, Anti-Patterns & Coverage: 06-testing-patterns.md

@@ -1,6 +1,6 @@
 # Rails Testing Methodology & Practice Guide
 
-**Purpose:** A hands-on guide to writing and running tests in a Ruby on Rails application. This complements [testing-strategy-service-projections.md](testing-strategy-service-projections.md), which covers *what* to test and *why*; this document covers *how* to actually do it.
+**Purpose:** A hands-on guide to writing and running tests in a Ruby on Rails application.
 
 **Audience:** Developers building features in the Planned Service module and future modules.
 
