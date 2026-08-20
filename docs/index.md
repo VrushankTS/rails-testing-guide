@@ -2055,4 +2055,409 @@ Sidekiq-specific retry tests can assert that the job ended up in the retry set w
 
 ---
 
-**Next:** Section 5 — System/End-to-End Testing
+## 5. System / End-to-End Testing
+
+### 5.1 Why system tests are useful, but not the main layer
+
+System tests, usually implemented with Capybara, simulate a real browser session and exercise the application the way a user would: click links, fill forms, submit pages, wait for content, and assert that the page changes as expected.
+
+These tests are valuable because they catch failures that only show up when the entire application stack works together:
+- the page loads with the right layout
+- the form submits correctly
+- validation messages appear in the browser
+- JavaScript-driven UI updates work as expected
+- navigation and route flow remain intact
+
+However, they are not the primary layer for most Rails business logic. In a rules-heavy backend project, the majority of confidence should come from:
+- model/unit tests for domain logic
+- request/integration tests for controller and API behavior
+- job tests for background processing
+
+System tests are a smaller, more expensive layer and should be used selectively.
+
+### 5.2 When to use Capybara/system tests
+
+Use them when the user journey is important enough that a backend-only test would be insufficient.
+
+Good candidates include:
+- vehicle registration flow
+- posting a completed service / updating service status
+- mapping invoice to vehicle and confirming the result on screen
+- login or role-based access flows
+- approval or rejection workflows
+- any multi-step journey that users actually rely on
+
+These are the kinds of workflows where a request spec may pass but the real browser flow still fails because of UI or JavaScript issues.
+
+### 5.3 When not to use them aggressively
+
+Avoid making Capybara the default test layer for every rule or every database validation. This usually leads to:
+- slow test runs
+- brittle tests that break due to minor markup changes
+- excessive maintenance cost
+- lower confidence in the actual business rules because the tests are too high-level and too slow to run often
+
+For a backend-heavy Rails app or a Service Projections system, it is usually better to keep system tests limited to a few critical journeys rather than trying to cover every rule through the browser.
+
+### 5.4 Common Capybara patterns
+
+A basic Capybara example:
+
+```ruby
+# spec/system/vehicle_registration_spec.rb
+require 'rails_helper'
+
+RSpec.describe "Vehicle registration", type: :system do
+  before do
+    driven_by(:rack_test) # For fast non-JS testing
+  end
+
+  it "allows a user to register a vehicle" do
+    model = create(:model, name: "Honda Activa")
+
+    visit "/vehicles/new"
+    fill_in "Registration number", with: "KA01AB1234"
+    select "Honda Activa", from: "Model"
+    select "RB", from: "Owner type"
+    fill_in "Invoice date", with: "2026-08-15"
+    click_button "Create Vehicle"
+
+    expect(page).to have_content("Vehicle was successfully created")
+    expect(page).to have_content("KA01AB1234")
+  end
+end
+```
+
+This checks real browser behavior, not just app logic. It verifies the workflow from the user's point of view.
+
+### 5.5 Typical browser interactions to test
+
+System tests should cover the critical user actions, for example:
+- `visit` a page
+- `fill_in` form fields
+- `select` dropdown values
+- `check` or `uncheck` checkboxes
+- `click_button` or `click_link`
+- `have_content` to assert page text appears
+- `have_current_path` to assert navigation
+- `have_css` or `have_selector` for more structured DOM assertions
+
+Example:
+
+```ruby
+it "shows validation errors for invalid input" do
+  visit "/vehicles/new"
+  click_button "Create Vehicle"
+
+  expect(page).to have_content("Registration number can't be blank")
+  expect(page).to have_current_path("/vehicles/new")
+end
+```
+
+### 5.6 For backend-heavy apps, keep them small and purposeful
+
+In projects like this one, system tests are best used for very targeted workflows, not for exhaustive business coverage.
+
+A practical rule:
+- Unit tests = cover the business rules
+- Request/integration tests = cover API and controller contracts
+- Job tests = cover asynchronous behavior
+- System tests = cover 2–5 critical user journeys only
+
+Example critical journeys for this project:
+- Register a vehicle and see it appear as live / pending invoice
+- Map an invoice and confirm projection is triggered
+- View the service due state on the dashboard
+- Submit a service completion and verify the correct status updates
+
+### 5.7 Avoiding brittle system tests
+
+Capybara tests can become flaky if overused. To keep them maintainable:
+- write only for the most important user paths
+- avoid testing every text variation or repeated HTML structure
+- prefer stable selectors like visible labels or data-test attributes
+- use `have_text`/`have_content` only for user-visible text
+- avoid depending on exact timing unless necessary
+- keep tests isolated and independent from one another
+
+A more stable practice is to use specific selectors in the app, for example:
+
+```html
+<button data-testid="save-vehicle-button">Save</button>
+```
+
+Then test with:
+
+```ruby
+find("[data-testid='save-vehicle-button']").click
+```
+
+This is far less likely to break than relying on page structure or vague CSS selectors.
+
+### 5.8 A realistic testing balance for this application
+
+For a Service Projections app, a balanced strategy is:
+- Use unit tests to cover vehicle type rules, lapse logic, service thresholds, and projection decisions
+- Use request specs to test controller/API actions and state changes
+- Use job specs to cover sweeper, notification, projection workers
+- Use a few Capybara/system tests for the workflows that matter most to the business and the user experience
+
+This is the sane default for Rails teams that do significant backend development but also have real browser-based actions.
+
+### 5.9 Final guidance
+
+Capybara/system tests are significant because they validate the browser experience, but they are not the backbone of a rules-heavy Rails application. They are a valuable top layer, not the foundation.
+
+For this project, do not feel pressured to treat them as mandatory for every feature. Instead, keep them focused on the critical user journeys where a browser-level test adds real value.
+
+---
+
+## 6. Rails-Specific Testing Patterns and Critical Practices
+
+### 6.1 Focus on the Rails behaviors that break apps
+
+For a Rails application, the most important tests are usually not generic "Ruby tests" but tests for actual Rails behavior:
+- model validation and association rules
+- ActiveRecord queries and scopes
+- callbacks and lifecycle hooks
+- state transitions and status changes
+- background jobs and delayed work
+- request/response behavior for controller actions
+
+These are the places where bugs tend to hide in production.
+
+### 6.2 Validations: test the business rule, not just the Rails API
+
+Validate the actual rule you care about:
+
+```ruby
+it "requires a unique registration number" do
+  create(:vehicle, registration_number: "KA01AB1234")
+  duplicate = build(:vehicle, registration_number: "KA01AB1234")
+
+  expect(duplicate).not_to be_valid
+end
+```
+
+Do not write shallow tests like "model is valid" without checking the real constraint.
+
+### 6.3 Associations and related records
+
+Test the behavior of relationships that affect business flow:
+- `belongs_to` / `has_many` correctness
+- dependent destroy behavior
+- foreign key constraints
+- cascading status updates when parent/child records change
+
+Example:
+
+```ruby
+it "removes the vehicle's projections when the vehicle is deleted" do
+  vehicle = create(:vehicle)
+  create(:projection, vehicle: vehicle)
+
+  vehicle.destroy
+
+  expect(Projection.where(vehicle_id: vehicle.id)).to be_empty
+end
+```
+
+### 6.4 Scopes and queries must be tested as business logic
+
+In Rails, query methods often contain logic that is easy to break silently. Test:
+- filters by status, owner type, due date
+- ordering rules
+- edge cases like nil or empty results
+- the exact records returned
+
+```ruby
+it "returns only vehicles with pending projections" do
+  pending = create(:vehicle, projection_status: "PENDING")
+  projected = create(:vehicle, projection_status: "PROJECTED")
+
+  expect(Vehicle.with_pending_projection).to contain_exactly(pending)
+end
+```
+
+### 6.5 Callbacks and lifecycle hooks
+
+Callbacks are a critical Rails feature, but they are also a common source of hidden side effects.
+
+Test:
+- whether a callback actually triggers the expected job or status update
+- both the success and failure paths
+- whether the callback runs only when expected
+
+```ruby
+it "enqueues projection job after a vehicle is created" do
+  expect {
+    create(:vehicle)
+  }.to have_enqueued_job(ProjectServiceJob)
+end
+```
+
+### 6.6 Time and date handling is a major test risk
+
+Business logic like service due dates, lapsing, and buffer windows is date-sensitive. Do not rely on real current time in tests.
+
+Use:
+- `travel_to`
+- `freeze_time`
+- explicit date values in factories
+
+```ruby
+travel_to Date.new(2026, 8, 20) do
+  vehicle = create(:vehicle, invoice_date: Date.new(2025, 8, 15))
+  expect(vehicle.next_service_due_date).to eq(Date.new(2026, 8, 29))
+end
+```
+
+This avoids flaky, calendar-dependent tests.
+
+### 6.7 Transactions and test isolation are critical
+
+Rails tests run in a transactional database context by default. This is good, but do not assume it solves every test isolation problem.
+
+Be careful when:
+- running background jobs that execute after the transaction commits
+- creating records in callbacks that happen outside the ordinary request flow
+- using external services or queueing systems that are not isolated from the test DB
+
+If a test needs real queue behavior, use the test adapter or inline execution explicitly.
+
+### 6.8 External dependencies must be stubbed
+
+Bad production behavior often comes from external calls: SMS, email, invoice APIs, third-party retrieval services.
+
+Test the application logic without calling the real outside system:
+- `WebMock` for HTTP calls
+- VCR for recorded API responses
+- fake adapters for notification services
+
+```ruby
+stub_request(:post, "https://sms.example.com/send")
+  .to_return(status: 200)
+```
+
+### 6.9 Test the actual contract of your app
+
+Rails tests should check what the app is supposed to do as a system, not just what a method returns internally.
+
+Most important contract checks:
+- request returns the correct HTTP status
+- response body contains the expected JSON/data
+- database state changes as expected
+- async job is enqueued or executed
+- user-facing status changes are reflected correctly
+
+This is often more valuable than testing every implementation detail.
+
+### 6.10 Avoid the most common anti-patterns
+
+Avoid these patterns in a Rails codebase:
+- testing implementation details instead of behavior
+- writing giant tests that do multiple unrelated things
+- creating brittle tests tied to exact HTML structure
+- depending on test order
+- reusing global state across examples
+- testing the same rule in five different layers unnecessarily
+- relying on real external systems in CI
+
+A good Rails test answers one business question clearly and fails for one valid reason.
+
+### 6.11 The highest-value test mix for this app
+
+For the Service Projections app, the most valuable test stack is:
+- Unit tests for projection rules, service thresholds, owner-type logic, and lapse logic
+- Request tests for register / map invoice / project service / status change flows
+- Job tests for sweeper and notification workers
+- A few system tests only for critical user journeys
+
+This gives strong confidence without over-investing in slow browser-level tests.
+
+### 6.12 Final principle
+
+Keep the test suite readable, realistic, and focused on the actual business contract.
+
+If a test does not protect a real business risk or a real lifecycle behavior, it is probably not worth keeping at high priority.
+
+---
+
+## 7. Common Testing Patterns, Anti-Patterns, and Coverage
+
+### 7.1 Why a dedicated section is useful
+
+Some of the guidance in this section overlaps with earlier material, but a short dedicated section is still useful because it captures the team standards that matter most in daily work:
+- what good tests look like
+- what to avoid
+- how to measure whether the suite is strong enough
+
+This helps keep the testing culture consistent as the app grows.
+
+### 7.2 Good testing patterns to follow
+
+Use these as default rules for the team:
+- Test behavior, not implementation details.
+- One test should answer one business question.
+- Prefer realistic data over synthetic shortcuts.
+- Use factories for variations and traits for common scenarios.
+- Keep model tests focused on rules and edge cases.
+- Keep request tests focused on contracts and state changes.
+- Keep job tests focused on side effects and failure handling.
+- Keep system tests limited to critical user journeys.
+
+### 7.3 Common anti-patterns to avoid
+
+Avoid these practices because they create slow, brittle, and low-value tests:
+- asserting on private method calls instead of user-visible output
+- testing the same rule in too many layers
+- writing giant tests that mix multiple scenarios
+- relying on global shared state between examples
+- depending on database order or test execution order
+- hard-coding fragile HTML or CSS selectors in system tests
+- using real third-party APIs in CI
+- testing current date/time without freezing it
+
+If a test is hard to understand, it is usually too broad or too coupled to internals.
+
+### 7.4 Coverage: useful, but not the only objective
+
+We use `SimpleCov` to measure how much of the application code is exercised by tests. This is useful because it tells us whether key business logic is being covered consistently.
+
+Example setup from Section 1:
+
+```ruby
+# spec/spec_helper.rb
+require 'simplecov'
+
+SimpleCov.start 'rails' do
+  add_filter '/spec/'
+  add_filter '/config/'
+  add_filter '/db/'
+end
+```
+
+### 7.5 Practical coverage guidance
+
+Coverage is a helpful signal, but it should not become the sole goal.
+
+For this project, a sensible focus is:
+- model logic: high coverage
+- service logic: high coverage
+- projection/sweeper/notification code: high coverage
+- request and job flows: strong but not necessarily 100%
+- system tests: limited and selective
+
+A suite with 90%+ coverage in the rule-heavy and background-job-heavy parts of the app is generally much more valuable than a suite that hits 100% of trivial code but misses the risky cases.
+
+### 7.6 Recommended team policy
+
+The team should follow this policy:
+- Do not merge code that breaks a relevant existing test.
+- Add tests when changing business logic, especially in projection rules and status transitions.
+- Use coverage as a review aid, not as a target to chase blindly.
+- Prefer meaningful business coverage over inflated percentages.
+
+This keeps the suite useful, maintainable, and aligned with real production risk.
+
+---
