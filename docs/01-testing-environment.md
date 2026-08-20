@@ -63,6 +63,7 @@ bundle exec rails generate rspec:install
 ```
 
 This creates:
+
 - `.rspec` — command-line options for the `rspec` command
 - `spec/spec_helper.rb` — shared RSpec setup
 - `spec/rails_helper.rb` — Rails-specific RSpec setup
@@ -263,6 +264,7 @@ jobs:
 ```
 
 This ensures:
+
 - Tests run on every push and pull request
 - When configured as a required status check, failing tests can prevent a PR from being merged
 - Developers get immediate feedback

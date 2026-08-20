@@ -39,6 +39,7 @@ end
 ```
 
 **Breaking it down:**
+
 - `describe` — top-level grouping for a class or feature
 - `context` — a specific scenario or condition (optional, but improves readability)
 - `it` — defines a single example that describes one behavior or outcome
@@ -423,6 +424,7 @@ lapsed_geared_vehicle = create(:vehicle, :geared, :overdue_for_service)
 ### 2.8 Controlling Time and Stubbing External Dependencies
 
 Real code often depends on things outside your control:
+
 - Current time (Date.today, Time.now)
 - External APIs (invoice scanning service, SMS provider)
 - Randomness
@@ -750,6 +752,7 @@ open coverage/index.html
 Coverage targets should be agreed upon based on the project's risk profile and testing strategy. High coverage is particularly valuable around business-critical models, services, calculations, and workflows, while a lower percentage may be reasonable for boilerplate or framework-driven code.
 
 Focus on:
+
 - ✅ All business logic paths
 - ✅ Error/edge cases
 - ❌ Trivial getters/setters

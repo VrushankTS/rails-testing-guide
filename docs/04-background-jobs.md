@@ -1,6 +1,7 @@
 ### 4.1 Overview
 
 Background processing is a core part of the Service Projections app: projections are calculated in the background, the sweeper periodically scans the fleet, and notification workers alert users when a projection enters a buffer window. Tests for jobs focus on two things:
+
 - Was the job enqueued when it should have been? (contract test)
 - When the job runs, does it produce the expected side effects? (behavior test)
 
@@ -191,10 +192,10 @@ Sidekiq-specific retry tests can assert that the job ended up in the retry set w
 ### 4.8 Common Pitfalls & How to Avoid Them
 
 - Transactional tests and background jobs: If a job runs in a separate thread or process, it may not see records created inside an RSpec transaction. Solutions:
-  - Use the test adapter (`ActiveJob::Base.queue_adapter = :test`) and `perform_enqueued_jobs` so jobs execute inline in the same thread.
-  - For Sidekiq, use `Sidekiq::Testing.inline!` for tests that must execute jobs immediately.
-  - When a job is queued in an `after_commit` callback, ensure the commit happens before asserting the job was enqueued — use `create(:record)` (not build) so callbacks run.
-  - If needed, disable transactional fixtures for a test and use database_cleaner or explicit cleanup.
+    - Use the test adapter (`ActiveJob::Base.queue_adapter = :test`) and `perform_enqueued_jobs` so jobs execute inline in the same thread.
+    - For Sidekiq, use `Sidekiq::Testing.inline!` for tests that must execute jobs immediately.
+    - When a job is queued in an `after_commit` callback, ensure the commit happens before asserting the job was enqueued — use `create(:record)` (not build) so callbacks run.
+    - If needed, disable transactional fixtures for a test and use database_cleaner or explicit cleanup.
 
 - Flaky tests from external services: Always stub HTTP calls (WebMock/VCR) or provide a fake adapter for sending SMS/email.
 

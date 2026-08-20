@@ -3,6 +3,7 @@
 System tests, usually implemented with Capybara, simulate a real browser session and exercise the application the way a user would: click links, fill forms, submit pages, wait for content, and assert that the page changes as expected.
 
 These tests are valuable because they catch failures that only show up when the entire application stack works together:
+
 - the page loads with the right layout
 - the form submits correctly
 - validation messages appear in the browser
@@ -10,6 +11,7 @@ These tests are valuable because they catch failures that only show up when the 
 - navigation and route flow remain intact
 
 However, they are not the primary layer for most Rails business logic. In a rules-heavy backend project, the majority of confidence should come from:
+
 - model/unit tests for domain logic
 - request/integration tests for controller and API behavior
 - job tests for background processing
@@ -21,6 +23,7 @@ System tests are a smaller, more expensive layer and should be used selectively.
 Use them when the user journey is important enough that a backend-only test would be insufficient.
 
 Good candidates include:
+
 - vehicle registration flow
 - posting a completed service / updating service status
 - mapping invoice to vehicle and confirming the result on screen
@@ -33,6 +36,7 @@ These are the kinds of workflows where a request spec may pass but the real brow
 ### 5.3 When not to use them aggressively
 
 Avoid making Capybara the default test layer for every rule or every database validation. This usually leads to:
+
 - slow test runs
 - brittle tests that break due to minor markup changes
 - excessive maintenance cost
@@ -74,6 +78,7 @@ This checks real browser behavior, not just app logic. It verifies the workflow 
 ### 5.5 Typical browser interactions to test
 
 System tests should cover the critical user actions, for example:
+
 - `visit` a page
 - `fill_in` form fields
 - `select` dropdown values
@@ -100,12 +105,14 @@ end
 In projects like this one, system tests are best used for very targeted workflows, not for exhaustive business coverage.
 
 A practical rule:
+
 - Unit tests = cover the business rules
 - Request/integration tests = cover API and controller contracts
 - Job tests = cover asynchronous behavior
 - System tests = cover 2–5 critical user journeys only
 
 Example critical journeys for this project:
+
 - Register a vehicle and see it appear as live / pending invoice
 - Map an invoice and confirm projection is triggered
 - View the service due state on the dashboard
@@ -114,6 +121,7 @@ Example critical journeys for this project:
 ### 5.7 Avoiding brittle system tests
 
 Capybara tests can become flaky if overused. To keep them maintainable:
+
 - write only for the most important user paths
 - avoid testing every text variation or repeated HTML structure
 - prefer stable selectors like visible labels or data-test attributes
@@ -138,6 +146,7 @@ This is far less likely to break than relying on page structure or vague CSS sel
 ### 5.8 A realistic testing balance for this application
 
 For a Service Projections app, a balanced strategy is:
+
 - Use unit tests to cover vehicle type rules, lapse logic, service thresholds, and projection decisions
 - Use request specs to test controller/API actions and state changes
 - Use job specs to cover sweeper, notification, projection workers

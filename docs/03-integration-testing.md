@@ -51,6 +51,7 @@ end
 ```
 
 **Key differences from unit tests:**
+
 - Uses `post`, `get`, `patch`, `delete` to simulate HTTP verbs
 - Checks `response` status and body
 - Verifies database state after the request
@@ -173,6 +174,7 @@ end
 ### 3.4 Testing Request Parameters and Headers
 
 Requests can include:
+
 - **Query parameters** (`?page=1&sort=date`)
 - **URL path parameters** (`/vehicles/123`)
 - **Body parameters** (submitted with POST/PATCH/etc.)
@@ -292,6 +294,7 @@ end
 ```
 
 Common status code symbols in RSpec:
+
 - `:ok` (200), `:created` (201), `:no_content` (204)
 - `:bad_request` (400), `:unauthorized` (401), `:forbidden` (403), `:not_found` (404)
 - `:unprocessable_entity` (422)
@@ -430,6 +433,7 @@ end
 ### 3.7 Testing the HTTP Contract
 
 A request spec should primarily verify what a client of the application can observe:
+
 - HTTP status
 - response body and structure
 - relevant headers

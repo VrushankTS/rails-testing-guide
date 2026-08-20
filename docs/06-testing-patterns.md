@@ -1,6 +1,7 @@
 ### 6.1 Focus on the Rails behaviors that break apps
 
 For a Rails application, the most important tests are usually not generic "Ruby tests" but tests for actual Rails behavior:
+
 - model validation and association rules
 - ActiveRecord queries and scopes
 - callbacks and lifecycle hooks
@@ -28,6 +29,7 @@ Do not write shallow tests like "model is valid" without checking the real const
 ### 6.3 Associations and related records
 
 Test the behavior of relationships that affect business flow:
+
 - `belongs_to` / `has_many` correctness
 - dependent destroy behavior
 - foreign key constraints
@@ -49,6 +51,7 @@ end
 ### 6.4 Scopes and queries must be tested as business logic
 
 In Rails, query methods often contain logic that is easy to break silently. Test:
+
 - filters by status, owner type, due date
 - ordering rules
 - edge cases like nil or empty results
@@ -68,6 +71,7 @@ end
 Callbacks are a critical Rails feature, but they are also a common source of hidden side effects.
 
 Test:
+
 - whether a callback actually triggers the expected job or status update
 - both the success and failure paths
 - whether the callback runs only when expected
@@ -85,6 +89,7 @@ end
 Business logic like service due dates, lapsing, and buffer windows is date-sensitive. Do not rely on real current time in tests.
 
 Use:
+
 - `travel_to`
 - `freeze_time`
 - explicit date values in factories
@@ -103,6 +108,7 @@ This avoids flaky, calendar-dependent tests.
 Rails tests run in a transactional database context by default. This is good, but do not assume it solves every test isolation problem.
 
 Be careful when:
+
 - running background jobs that execute after the transaction commits
 - creating records in callbacks that happen outside the ordinary request flow
 - using external services or queueing systems that are not isolated from the test DB
@@ -114,6 +120,7 @@ If a test needs real queue behavior, use the test adapter or inline execution ex
 Bad production behavior often comes from external calls: SMS, email, invoice APIs, third-party retrieval services.
 
 Test the application logic without calling the real outside system:
+
 - `WebMock` for HTTP calls
 - VCR for recorded API responses
 - fake adapters for notification services
@@ -128,6 +135,7 @@ stub_request(:post, "https://sms.example.com/send")
 Rails tests should check what the app is supposed to do as a system, not just what a method returns internally.
 
 Most important contract checks:
+
 - request returns the correct HTTP status
 - response body contains the expected JSON/data
 - database state changes as expected
@@ -139,6 +147,7 @@ This is often more valuable than testing every implementation detail.
 ### 6.10 Common anti-patterns to avoid
 
 Avoid these patterns — they create slow, brittle, low-value tests:
+
 - testing implementation details or private method calls instead of user-visible behavior
 - writing giant tests that mix multiple unrelated scenarios
 - creating brittle tests tied to exact HTML/CSS structure in system tests
@@ -155,6 +164,7 @@ If a test is hard to understand, it's usually too broad or too coupled to intern
 We use `SimpleCov` to measure how much of the application code is exercised by tests (setup covered in Section 1.7). This is a helpful signal for whether key business logic is being covered consistently — but it should not become the sole goal.
 
 For this project, a sensible focus is:
+
 - model logic: high coverage
 - service logic: high coverage
 - projection/sweeper/notification code: high coverage
