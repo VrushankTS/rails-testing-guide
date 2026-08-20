@@ -1455,6 +1455,354 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#5-system-end-to-end-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. System / End-to-End Testing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. System / End-to-End Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-why-system-tests-are-useful-but-not-the-main-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Why system tests are useful, but not the main layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-when-to-use-capybarasystem-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 When to use Capybara/system tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-when-not-to-use-them-aggressively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 When not to use them aggressively
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-common-capybara-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Common Capybara patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-typical-browser-interactions-to-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Typical browser interactions to test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-for-backend-heavy-apps-keep-them-small-and-purposeful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 For backend-heavy apps, keep them small and purposeful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-avoiding-brittle-system-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Avoiding brittle system tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-a-realistic-testing-balance-for-this-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 A realistic testing balance for this application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-final-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Final guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-rails-specific-testing-patterns-and-critical-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Rails-Specific Testing Patterns and Critical Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Rails-Specific Testing Patterns and Critical Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-focus-on-the-rails-behaviors-that-break-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Focus on the Rails behaviors that break apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-validations-test-the-business-rule-not-just-the-rails-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Validations: test the business rule, not just the Rails API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-associations-and-related-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Associations and related records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-scopes-and-queries-must-be-tested-as-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Scopes and queries must be tested as business logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-callbacks-and-lifecycle-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Callbacks and lifecycle hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-time-and-date-handling-is-a-major-test-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Time and date handling is a major test risk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-transactions-and-test-isolation-are-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Transactions and test isolation are critical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-external-dependencies-must-be-stubbed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 External dependencies must be stubbed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#69-test-the-actual-contract-of-your-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 Test the actual contract of your app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#610-avoid-the-most-common-anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.10 Avoid the most common anti-patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#611-the-highest-value-test-mix-for-this-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.11 The highest-value test mix for this app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-final-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.12 Final principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-testing-patterns-anti-patterns-and-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Testing Patterns, Anti-Patterns, and Coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Testing Patterns, Anti-Patterns, and Coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-why-a-dedicated-section-is-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Why a dedicated section is useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-good-testing-patterns-to-follow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Good testing patterns to follow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-common-anti-patterns-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Common anti-patterns to avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-coverage-useful-but-not-the-only-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Coverage: useful, but not the only objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-practical-coverage-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Practical coverage guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-recommended-team-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Recommended team policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2682,6 +3030,354 @@
     <span class="md-ellipsis">
       
         4.9 Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-system-end-to-end-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. System / End-to-End Testing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. System / End-to-End Testing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-why-system-tests-are-useful-but-not-the-main-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Why system tests are useful, but not the main layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-when-to-use-capybarasystem-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 When to use Capybara/system tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-when-not-to-use-them-aggressively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 When not to use them aggressively
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-common-capybara-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Common Capybara patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-typical-browser-interactions-to-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Typical browser interactions to test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-for-backend-heavy-apps-keep-them-small-and-purposeful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 For backend-heavy apps, keep them small and purposeful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-avoiding-brittle-system-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Avoiding brittle system tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-a-realistic-testing-balance-for-this-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 A realistic testing balance for this application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-final-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Final guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-rails-specific-testing-patterns-and-critical-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Rails-Specific Testing Patterns and Critical Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Rails-Specific Testing Patterns and Critical Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-focus-on-the-rails-behaviors-that-break-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Focus on the Rails behaviors that break apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-validations-test-the-business-rule-not-just-the-rails-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Validations: test the business rule, not just the Rails API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-associations-and-related-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Associations and related records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-scopes-and-queries-must-be-tested-as-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Scopes and queries must be tested as business logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-callbacks-and-lifecycle-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Callbacks and lifecycle hooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-time-and-date-handling-is-a-major-test-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 Time and date handling is a major test risk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-transactions-and-test-isolation-are-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 Transactions and test isolation are critical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-external-dependencies-must-be-stubbed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 External dependencies must be stubbed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#69-test-the-actual-contract-of-your-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 Test the actual contract of your app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#610-avoid-the-most-common-anti-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.10 Avoid the most common anti-patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#611-the-highest-value-test-mix-for-this-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.11 The highest-value test mix for this app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-final-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.12 Final principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-common-testing-patterns-anti-patterns-and-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Common Testing Patterns, Anti-Patterns, and Coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Common Testing Patterns, Anti-Patterns, and Coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-why-a-dedicated-section-is-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Why a dedicated section is useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-good-testing-patterns-to-follow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Good testing patterns to follow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-common-anti-patterns-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Common anti-patterns to avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-coverage-useful-but-not-the-only-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Coverage: useful, but not the only objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-practical-coverage-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Practical coverage guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-recommended-team-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Recommended team policy
       
     </span>
   </a>
@@ -4473,7 +5169,296 @@ end
 <li>Stub external calls and verify interactions with fake adapters where possible.</li>
 </ul>
 <hr />
-<p><strong>Next:</strong> Section 5 — System/End-to-End Testing</p>
+<h2 id="5-system-end-to-end-testing">5. System / End-to-End Testing</h2>
+<h3 id="51-why-system-tests-are-useful-but-not-the-main-layer">5.1 Why system tests are useful, but not the main layer</h3>
+<p>System tests, usually implemented with Capybara, simulate a real browser session and exercise the application the way a user would: click links, fill forms, submit pages, wait for content, and assert that the page changes as expected.</p>
+<p>These tests are valuable because they catch failures that only show up when the entire application stack works together:
+- the page loads with the right layout
+- the form submits correctly
+- validation messages appear in the browser
+- JavaScript-driven UI updates work as expected
+- navigation and route flow remain intact</p>
+<p>However, they are not the primary layer for most Rails business logic. In a rules-heavy backend project, the majority of confidence should come from:
+- model/unit tests for domain logic
+- request/integration tests for controller and API behavior
+- job tests for background processing</p>
+<p>System tests are a smaller, more expensive layer and should be used selectively.</p>
+<h3 id="52-when-to-use-capybarasystem-tests">5.2 When to use Capybara/system tests</h3>
+<p>Use them when the user journey is important enough that a backend-only test would be insufficient.</p>
+<p>Good candidates include:
+- vehicle registration flow
+- posting a completed service / updating service status
+- mapping invoice to vehicle and confirming the result on screen
+- login or role-based access flows
+- approval or rejection workflows
+- any multi-step journey that users actually rely on</p>
+<p>These are the kinds of workflows where a request spec may pass but the real browser flow still fails because of UI or JavaScript issues.</p>
+<h3 id="53-when-not-to-use-them-aggressively">5.3 When not to use them aggressively</h3>
+<p>Avoid making Capybara the default test layer for every rule or every database validation. This usually leads to:
+- slow test runs
+- brittle tests that break due to minor markup changes
+- excessive maintenance cost
+- lower confidence in the actual business rules because the tests are too high-level and too slow to run often</p>
+<p>For a backend-heavy Rails app or a Service Projections system, it is usually better to keep system tests limited to a few critical journeys rather than trying to cover every rule through the browser.</p>
+<h3 id="54-common-capybara-patterns">5.4 Common Capybara patterns</h3>
+<p>A basic Capybara example:</p>
+<pre><code class="language-ruby"># spec/system/vehicle_registration_spec.rb
+require 'rails_helper'
+
+RSpec.describe &quot;Vehicle registration&quot;, type: :system do
+  before do
+    driven_by(:rack_test) # For fast non-JS testing
+  end
+
+  it &quot;allows a user to register a vehicle&quot; do
+    model = create(:model, name: &quot;Honda Activa&quot;)
+
+    visit &quot;/vehicles/new&quot;
+    fill_in &quot;Registration number&quot;, with: &quot;KA01AB1234&quot;
+    select &quot;Honda Activa&quot;, from: &quot;Model&quot;
+    select &quot;RB&quot;, from: &quot;Owner type&quot;
+    fill_in &quot;Invoice date&quot;, with: &quot;2026-08-15&quot;
+    click_button &quot;Create Vehicle&quot;
+
+    expect(page).to have_content(&quot;Vehicle was successfully created&quot;)
+    expect(page).to have_content(&quot;KA01AB1234&quot;)
+  end
+end
+</code></pre>
+<p>This checks real browser behavior, not just app logic. It verifies the workflow from the user's point of view.</p>
+<h3 id="55-typical-browser-interactions-to-test">5.5 Typical browser interactions to test</h3>
+<p>System tests should cover the critical user actions, for example:
+- <code>visit</code> a page
+- <code>fill_in</code> form fields
+- <code>select</code> dropdown values
+- <code>check</code> or <code>uncheck</code> checkboxes
+- <code>click_button</code> or <code>click_link</code>
+- <code>have_content</code> to assert page text appears
+- <code>have_current_path</code> to assert navigation
+- <code>have_css</code> or <code>have_selector</code> for more structured DOM assertions</p>
+<p>Example:</p>
+<pre><code class="language-ruby">it &quot;shows validation errors for invalid input&quot; do
+  visit &quot;/vehicles/new&quot;
+  click_button &quot;Create Vehicle&quot;
+
+  expect(page).to have_content(&quot;Registration number can't be blank&quot;)
+  expect(page).to have_current_path(&quot;/vehicles/new&quot;)
+end
+</code></pre>
+<h3 id="56-for-backend-heavy-apps-keep-them-small-and-purposeful">5.6 For backend-heavy apps, keep them small and purposeful</h3>
+<p>In projects like this one, system tests are best used for very targeted workflows, not for exhaustive business coverage.</p>
+<p>A practical rule:
+- Unit tests = cover the business rules
+- Request/integration tests = cover API and controller contracts
+- Job tests = cover asynchronous behavior
+- System tests = cover 2–5 critical user journeys only</p>
+<p>Example critical journeys for this project:
+- Register a vehicle and see it appear as live / pending invoice
+- Map an invoice and confirm projection is triggered
+- View the service due state on the dashboard
+- Submit a service completion and verify the correct status updates</p>
+<h3 id="57-avoiding-brittle-system-tests">5.7 Avoiding brittle system tests</h3>
+<p>Capybara tests can become flaky if overused. To keep them maintainable:
+- write only for the most important user paths
+- avoid testing every text variation or repeated HTML structure
+- prefer stable selectors like visible labels or data-test attributes
+- use <code>have_text</code>/<code>have_content</code> only for user-visible text
+- avoid depending on exact timing unless necessary
+- keep tests isolated and independent from one another</p>
+<p>A more stable practice is to use specific selectors in the app, for example:</p>
+<pre><code class="language-html">&lt;button data-testid=&quot;save-vehicle-button&quot;&gt;Save&lt;/button&gt;
+</code></pre>
+<p>Then test with:</p>
+<pre><code class="language-ruby">find(&quot;[data-testid='save-vehicle-button']&quot;).click
+</code></pre>
+<p>This is far less likely to break than relying on page structure or vague CSS selectors.</p>
+<h3 id="58-a-realistic-testing-balance-for-this-application">5.8 A realistic testing balance for this application</h3>
+<p>For a Service Projections app, a balanced strategy is:
+- Use unit tests to cover vehicle type rules, lapse logic, service thresholds, and projection decisions
+- Use request specs to test controller/API actions and state changes
+- Use job specs to cover sweeper, notification, projection workers
+- Use a few Capybara/system tests for the workflows that matter most to the business and the user experience</p>
+<p>This is the sane default for Rails teams that do significant backend development but also have real browser-based actions.</p>
+<h3 id="59-final-guidance">5.9 Final guidance</h3>
+<p>Capybara/system tests are significant because they validate the browser experience, but they are not the backbone of a rules-heavy Rails application. They are a valuable top layer, not the foundation.</p>
+<p>For this project, do not feel pressured to treat them as mandatory for every feature. Instead, keep them focused on the critical user journeys where a browser-level test adds real value.</p>
+<hr />
+<h2 id="6-rails-specific-testing-patterns-and-critical-practices">6. Rails-Specific Testing Patterns and Critical Practices</h2>
+<h3 id="61-focus-on-the-rails-behaviors-that-break-apps">6.1 Focus on the Rails behaviors that break apps</h3>
+<p>For a Rails application, the most important tests are usually not generic "Ruby tests" but tests for actual Rails behavior:
+- model validation and association rules
+- ActiveRecord queries and scopes
+- callbacks and lifecycle hooks
+- state transitions and status changes
+- background jobs and delayed work
+- request/response behavior for controller actions</p>
+<p>These are the places where bugs tend to hide in production.</p>
+<h3 id="62-validations-test-the-business-rule-not-just-the-rails-api">6.2 Validations: test the business rule, not just the Rails API</h3>
+<p>Validate the actual rule you care about:</p>
+<pre><code class="language-ruby">it &quot;requires a unique registration number&quot; do
+  create(:vehicle, registration_number: &quot;KA01AB1234&quot;)
+  duplicate = build(:vehicle, registration_number: &quot;KA01AB1234&quot;)
+
+  expect(duplicate).not_to be_valid
+end
+</code></pre>
+<p>Do not write shallow tests like "model is valid" without checking the real constraint.</p>
+<h3 id="63-associations-and-related-records">6.3 Associations and related records</h3>
+<p>Test the behavior of relationships that affect business flow:
+- <code>belongs_to</code> / <code>has_many</code> correctness
+- dependent destroy behavior
+- foreign key constraints
+- cascading status updates when parent/child records change</p>
+<p>Example:</p>
+<pre><code class="language-ruby">it &quot;removes the vehicle's projections when the vehicle is deleted&quot; do
+  vehicle = create(:vehicle)
+  create(:projection, vehicle: vehicle)
+
+  vehicle.destroy
+
+  expect(Projection.where(vehicle_id: vehicle.id)).to be_empty
+end
+</code></pre>
+<h3 id="64-scopes-and-queries-must-be-tested-as-business-logic">6.4 Scopes and queries must be tested as business logic</h3>
+<p>In Rails, query methods often contain logic that is easy to break silently. Test:
+- filters by status, owner type, due date
+- ordering rules
+- edge cases like nil or empty results
+- the exact records returned</p>
+<pre><code class="language-ruby">it &quot;returns only vehicles with pending projections&quot; do
+  pending = create(:vehicle, projection_status: &quot;PENDING&quot;)
+  projected = create(:vehicle, projection_status: &quot;PROJECTED&quot;)
+
+  expect(Vehicle.with_pending_projection).to contain_exactly(pending)
+end
+</code></pre>
+<h3 id="65-callbacks-and-lifecycle-hooks">6.5 Callbacks and lifecycle hooks</h3>
+<p>Callbacks are a critical Rails feature, but they are also a common source of hidden side effects.</p>
+<p>Test:
+- whether a callback actually triggers the expected job or status update
+- both the success and failure paths
+- whether the callback runs only when expected</p>
+<pre><code class="language-ruby">it &quot;enqueues projection job after a vehicle is created&quot; do
+  expect {
+    create(:vehicle)
+  }.to have_enqueued_job(ProjectServiceJob)
+end
+</code></pre>
+<h3 id="66-time-and-date-handling-is-a-major-test-risk">6.6 Time and date handling is a major test risk</h3>
+<p>Business logic like service due dates, lapsing, and buffer windows is date-sensitive. Do not rely on real current time in tests.</p>
+<p>Use:
+- <code>travel_to</code>
+- <code>freeze_time</code>
+- explicit date values in factories</p>
+<pre><code class="language-ruby">travel_to Date.new(2026, 8, 20) do
+  vehicle = create(:vehicle, invoice_date: Date.new(2025, 8, 15))
+  expect(vehicle.next_service_due_date).to eq(Date.new(2026, 8, 29))
+end
+</code></pre>
+<p>This avoids flaky, calendar-dependent tests.</p>
+<h3 id="67-transactions-and-test-isolation-are-critical">6.7 Transactions and test isolation are critical</h3>
+<p>Rails tests run in a transactional database context by default. This is good, but do not assume it solves every test isolation problem.</p>
+<p>Be careful when:
+- running background jobs that execute after the transaction commits
+- creating records in callbacks that happen outside the ordinary request flow
+- using external services or queueing systems that are not isolated from the test DB</p>
+<p>If a test needs real queue behavior, use the test adapter or inline execution explicitly.</p>
+<h3 id="68-external-dependencies-must-be-stubbed">6.8 External dependencies must be stubbed</h3>
+<p>Bad production behavior often comes from external calls: SMS, email, invoice APIs, third-party retrieval services.</p>
+<p>Test the application logic without calling the real outside system:
+- <code>WebMock</code> for HTTP calls
+- VCR for recorded API responses
+- fake adapters for notification services</p>
+<pre><code class="language-ruby">stub_request(:post, &quot;https://sms.example.com/send&quot;)
+  .to_return(status: 200)
+</code></pre>
+<h3 id="69-test-the-actual-contract-of-your-app">6.9 Test the actual contract of your app</h3>
+<p>Rails tests should check what the app is supposed to do as a system, not just what a method returns internally.</p>
+<p>Most important contract checks:
+- request returns the correct HTTP status
+- response body contains the expected JSON/data
+- database state changes as expected
+- async job is enqueued or executed
+- user-facing status changes are reflected correctly</p>
+<p>This is often more valuable than testing every implementation detail.</p>
+<h3 id="610-avoid-the-most-common-anti-patterns">6.10 Avoid the most common anti-patterns</h3>
+<p>Avoid these patterns in a Rails codebase:
+- testing implementation details instead of behavior
+- writing giant tests that do multiple unrelated things
+- creating brittle tests tied to exact HTML structure
+- depending on test order
+- reusing global state across examples
+- testing the same rule in five different layers unnecessarily
+- relying on real external systems in CI</p>
+<p>A good Rails test answers one business question clearly and fails for one valid reason.</p>
+<h3 id="611-the-highest-value-test-mix-for-this-app">6.11 The highest-value test mix for this app</h3>
+<p>For the Service Projections app, the most valuable test stack is:
+- Unit tests for projection rules, service thresholds, owner-type logic, and lapse logic
+- Request tests for register / map invoice / project service / status change flows
+- Job tests for sweeper and notification workers
+- A few system tests only for critical user journeys</p>
+<p>This gives strong confidence without over-investing in slow browser-level tests.</p>
+<h3 id="612-final-principle">6.12 Final principle</h3>
+<p>Keep the test suite readable, realistic, and focused on the actual business contract.</p>
+<p>If a test does not protect a real business risk or a real lifecycle behavior, it is probably not worth keeping at high priority.</p>
+<hr />
+<h2 id="7-common-testing-patterns-anti-patterns-and-coverage">7. Common Testing Patterns, Anti-Patterns, and Coverage</h2>
+<h3 id="71-why-a-dedicated-section-is-useful">7.1 Why a dedicated section is useful</h3>
+<p>Some of the guidance in this section overlaps with earlier material, but a short dedicated section is still useful because it captures the team standards that matter most in daily work:
+- what good tests look like
+- what to avoid
+- how to measure whether the suite is strong enough</p>
+<p>This helps keep the testing culture consistent as the app grows.</p>
+<h3 id="72-good-testing-patterns-to-follow">7.2 Good testing patterns to follow</h3>
+<p>Use these as default rules for the team:
+- Test behavior, not implementation details.
+- One test should answer one business question.
+- Prefer realistic data over synthetic shortcuts.
+- Use factories for variations and traits for common scenarios.
+- Keep model tests focused on rules and edge cases.
+- Keep request tests focused on contracts and state changes.
+- Keep job tests focused on side effects and failure handling.
+- Keep system tests limited to critical user journeys.</p>
+<h3 id="73-common-anti-patterns-to-avoid">7.3 Common anti-patterns to avoid</h3>
+<p>Avoid these practices because they create slow, brittle, and low-value tests:
+- asserting on private method calls instead of user-visible output
+- testing the same rule in too many layers
+- writing giant tests that mix multiple scenarios
+- relying on global shared state between examples
+- depending on database order or test execution order
+- hard-coding fragile HTML or CSS selectors in system tests
+- using real third-party APIs in CI
+- testing current date/time without freezing it</p>
+<p>If a test is hard to understand, it is usually too broad or too coupled to internals.</p>
+<h3 id="74-coverage-useful-but-not-the-only-objective">7.4 Coverage: useful, but not the only objective</h3>
+<p>We use <code>SimpleCov</code> to measure how much of the application code is exercised by tests. This is useful because it tells us whether key business logic is being covered consistently.</p>
+<p>Example setup from Section 1:</p>
+<pre><code class="language-ruby"># spec/spec_helper.rb
+require 'simplecov'
+
+SimpleCov.start 'rails' do
+  add_filter '/spec/'
+  add_filter '/config/'
+  add_filter '/db/'
+end
+</code></pre>
+<h3 id="75-practical-coverage-guidance">7.5 Practical coverage guidance</h3>
+<p>Coverage is a helpful signal, but it should not become the sole goal.</p>
+<p>For this project, a sensible focus is:
+- model logic: high coverage
+- service logic: high coverage
+- projection/sweeper/notification code: high coverage
+- request and job flows: strong but not necessarily 100%
+- system tests: limited and selective</p>
+<p>A suite with 90%+ coverage in the rule-heavy and background-job-heavy parts of the app is generally much more valuable than a suite that hits 100% of trivial code but misses the risky cases.</p>
+<h3 id="76-recommended-team-policy">7.6 Recommended team policy</h3>
+<p>The team should follow this policy:
+- Do not merge code that breaks a relevant existing test.
+- Add tests when changing business logic, especially in projection rules and status transitions.
+- Use coverage as a review aid, not as a target to chase blindly.
+- Prefer meaningful business coverage over inflated percentages.</p>
+<p>This keeps the suite useful, maintainable, and aligned with real production risk.</p>
+<hr />
 
 
 
