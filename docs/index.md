@@ -18,7 +18,7 @@ A standard Rails project uses several layers of testing tools that work together
 | **Factory Bot** | Generates test data on demand (instead of static fixtures) | Explicitly added gem |
 | **Shoulda Matchers** | Pre-built assertions for common Rails patterns (validations, associations, callbacks) | Explicitly added gem |
 | **VCR** | Records and replays HTTP interactions to avoid hitting real APIs during tests | Explicitly added gem |
-| **Capybara** | Browser-like test driver (clicks links, fills forms, waits for content) | Comes with Rails; activated when RSpec system tests are used |
+| **Capybara** | Provides a browser-like DSL for system tests (visiting pages, clicking links, filling forms, etc.) | Added/configured as part of the system-testing stack
 | **SimpleCov** | Measures test coverage (% of code actually exercised by tests) | Explicitly added gem |
 | **Faker** | Generates realistic fake data (names, emails, phone numbers, etc.) | Often paired with Factory Bot |
 
@@ -32,8 +32,8 @@ group :test do
   gem 'factory_bot_rails'        # Generate test data
   gem 'shoulda-matchers'         # Pre-built matchers for validations, associations
   gem 'faker'                    # Realistic fake data generation
-  gem 'vcr'                      # Record/replay HTTP responses
-  gem 'webmock'                  # Stub HTTP requests (required by VCR)
+  gem 'vcr'                      # Record/replay HTTP interactions
+  gem 'webmock'                  # Stub HTTP requests; commonly used with VCR
   gem 'simplecov'                # Code coverage measurement
   gem 'rspec-its'                # One-liner test syntax (optional, but nice for simple checks)
 end
@@ -44,23 +44,25 @@ Install these with:
 bundle install
 ```
 
+
 ### 1.3 Directory Structure
 
 After generating a Rails app, your test files live in the `spec/` folder (because we use RSpec, not the default `test/` folder):
 
 ```
 spec/
-├── models/              # Model tests (validations, associations, methods)
-├── requests/            # Integration tests (API endpoints, controllers)
-├── jobs/                # Background job tests
-├── services/            # Service/PORO tests (business logic classes)
-├── system/              # End-to-end browser tests
-├── support/             # Helper code (shared examples, custom matchers)
-│   ├── factory_bot.rb
-│   └── shared_examples.rb
-├── fixtures/            # Static test data (used by VCR)
-└── spec_helper.rb       # Main RSpec configuration
+├── models/              # Model specs
+├── requests/            # Request/integration specs
+├── jobs/                # Background job specs
+├── services/            # Service/PORO specs
+├── system/              # System/end-to-end specs
+├── support/             # Shared examples, helpers, custom matchers
+├── fixtures/            # Optional static test data
+├── vcr_cassettes/       # VCR recordings, if VCR is used
+└── spec_helper.rb
 ```
+(Please note that **the exact directory structure is not a mandatory Rails/RSpec requirement**. They're a recommended organizational convention.)
+
 
 ### 1.4 Setting Up RSpec in a Rails Project
 
@@ -101,7 +103,7 @@ end
 
 This does several important things:
 - Loads your Rails app with `ENV['RAILS_ENV'] = 'test'`
-- Enables automatic transaction rollback so each test starts with a clean database
+- Enables transactional test isolation, so database changes made within a test are rolled back after the test completes.
 - Maps file locations to spec types (so RSpec knows a file in `spec/models/` is a model test)
 
 ### 1.5 Setting Up Factory Bot
@@ -160,17 +162,14 @@ After running tests, SimpleCov generates an HTML report in `coverage/index.html`
 ```bash
 bundle exec rspec
 # ... tests run ...
-# Then open coverage/index.html in your browser to see coverage %
+# Then open coverage/index.html in your browser to see percentage of measured application code executed by the test suite
 ```
 
 ### 1.8 The Test Database
 
-Rails automatically manages a **test database** that:
-- Is separate from your development database
-- Gets wiped and rebuilt from your schema before tests run
-- Is wrapped in a transaction for each test, so changes are rolled back automatically
-
-No configuration needed — Rails handles this automatically. But occasionally you may need to:
+- Rails uses a separate database for the `test` environment, so tests do not normally operate on your development data.
+- When transactional fixtures are enabled, database changes made during a test are wrapped in a transaction and rolled back after the test completes. This provides isolation between tests without requiring the entire database to be recreated for every test.
+- The test database must still have the expected schema. When migrations or schema-related configuration change, you may need to prepare or rebuild the test database.
 
 ```bash
 # Rebuild the test database schema (if you modified migrations)
@@ -257,15 +256,15 @@ jobs:
     
     services:
       postgres:
-        image: postgres:13
+        image: postgres:YOUR_POSTGRES_VERSION
         env:
           POSTGRES_PASSWORD: postgres
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1
+          ruby-version: 'YOUR_PROJECT_RUBY_VERSION'
           bundler-cache: true
       
       - run: bundle exec rails db:test:prepare
@@ -275,7 +274,7 @@ jobs:
 
 This ensures:
 - Tests run on every push and pull request
-- If tests fail, the PR can't be merged
+- When configured as a required status check, failing tests can prevent a PR from being merged
 - Developers get immediate feedback
 
 ### 1.12 Debugging Tests
@@ -306,8 +305,9 @@ end
 
 Then run the test with:
 ```bash
-bundle exec rspec spec/models/vehicle_spec.rb --pry
+bundle exec rspec spec/models/vehicle_spec.rb
 ```
+When execution reaches `binding.pry`, the test process pauses and opens a Pry session.
 
 #### See what SQL is being executed:
 ```ruby
@@ -325,18 +325,22 @@ end
 
 ### 2.1 Overview: What Unit Tests Do
 
-A unit test checks one isolated piece of business logic in complete isolation. It doesn't:
-- Call other business logic methods
-- Hit the real database (or pretends not to, by using transactions)
-- Make HTTP requests
-- Touch the filesystem
-- Depend on the current time
+A unit test focuses on a relatively small unit of behavior and verifies that it behaves correctly under specific conditions.
 
-It does:
-- Check that a single rule or calculation works correctly
-- Verify error handling and edge cases
-- Run in milliseconds
-- Give pinpoint feedback when it fails
+In Rails, the "unit" is often a model, service object, PORO, or a specific method. A unit test may still interact with the test database when the behavior being tested depends on ActiveRecord, validations, associations, scopes, or persistence.
+
+The goal is to keep the test focused on the behavior under examination and isolate unrelated external dependencies where practical.
+
+Unit tests typically:
+
+- Verify a specific rule, calculation, or behavior
+- Cover expected, invalid, and edge-case scenarios
+- Avoid unnecessary external dependencies such as real HTTP requests
+- Use controlled time, randomness, or external service responses when needed
+- Provide focused feedback when a particular behavior breaks
+
+For example, a model validation test may use the test database, while a pure calculation can often use `build_stubbed` or plain Ruby objects without database access.
+
 
 ### 2.2 The Basic Structure of a Unit Test
 
@@ -362,7 +366,7 @@ end
 **Breaking it down:**
 - `describe` — top-level grouping for a class or feature
 - `context` — a specific scenario or condition (optional, but improves readability)
-- `it` — a single test case (should be one assertion, conceptually)
+- `it` — defines a single example that describes one behavior or outcome
 - Arrange → Act → Assert — the three steps of every test
 
 ### 2.3 Testing Models — Validations
@@ -392,9 +396,7 @@ describe Vehicle do
 end
 ```
 
-These `should validate_*` lines are **Shoulda Matchers** — pre-written assertions for common Rails patterns. They're faster to write than manual assertions, and you get for free:
-- Proper error messages when they fail
-- Checking edge cases (like what happens with nil, empty string, etc.)
+These `validate_*` lines use Shoulda Matchers to concisely verify common Rails validation behavior. They reduce boilerplate compared with manually constructing invalid records and inspecting errors. When the business rule has additional conditions or edge cases, write explicit examples for those cases.
 
 If you need a custom validation test that Shoulda doesn't have a matcher for:
 
@@ -539,9 +541,11 @@ describe Vehicle, type: :model do
 end
 ```
 
+Because query methods can depend on the current date/time, tests should control time when the boundary itself is important. See Section 2.8 for `travel_to`.
+
 ### 2.6 Testing Models — Custom Methods and Business Logic
 
-This is where the core rules of your system get tested. For the Service Projections app, this includes methods that calculate projections, determine vehicle type rules, check lapse status, etc.
+This is where the core rules of your system get tested. In the Service Projections examples used throughout this guide, this includes methods that calculate projections, determine vehicle type rules, check lapse status, etc.
 
 ```ruby
 # app/models/projection.rb
@@ -675,6 +679,8 @@ gearless_vehicle = create(:vehicle,
 )
 ```
 
+Use `build_stubbed` when the code under test only needs an object that behaves like a persisted record and does not require real database interaction.
+
 #### Traits — Reusable Variations:
 
 Rather than creating a new factory for every variation, use traits:
@@ -739,7 +745,7 @@ gearless_vehicles = create_list(:vehicle, 3, :gearless)
 lapsed_geared_vehicle = create(:vehicle, :geared, :overdue_for_service)
 ```
 
-### 2.8 Mocking and Stubbing External Dependencies
+### 2.8 Controlling Time and Stubbing External Dependencies
 
 Real code often depends on things outside your control:
 - Current time (Date.today, Time.now)
@@ -749,7 +755,7 @@ Real code often depends on things outside your control:
 
 In tests, you want to isolate your logic from these. Use mocking:
 
-#### Stubbing Time (Very Common):
+#### Controlling Time in Tests (Very Common):
 
 ```ruby
 # app/models/projection.rb
@@ -785,6 +791,8 @@ end
 The `travel_to` method (built into Rails tests) freezes time at a specific date. Your code sees `Date.today` as that frozen date.
 
 #### Stubbing HTTP Calls (Using WebMock):
+
+Don't test the third-party API itself. Test how your application behaves given the responses it expects from that API.
 
 ```ruby
 # app/services/invoice_scanner.rb
@@ -845,9 +853,15 @@ describe "#update_projection" do
     fake_projection = build(:projection)
     
     # Stub the entire calculator
-    allow_any_instance_of(ProjectionCalculator)
-      .to receive(:calculate)
-      .and_return(fake_projection)
+    calculator = instance_double(
+      ProjectionCalculator,
+      calculate: fake_projection
+    )
+
+    allow(ProjectionCalculator)
+      .to receive(:new)
+      .with(vehicle)
+      .and_return(calculator)
     
     vehicle.update_projection
     
@@ -858,7 +872,7 @@ end
 
 ### 2.9 Testing Callbacks and Hooks
 
-ActiveRecord callbacks (before_save, after_create, etc.) are tested by triggering the action that fires the callback:
+ActiveRecord callbacks (`before_save`, `after_create`, etc.) are tested by triggering the action that fires the callback:
 
 ```ruby
 # app/models/vehicle.rb
@@ -883,6 +897,8 @@ describe "callbacks" do
   end
 end
 ```
+Prefer testing the observable behavior caused by the callback rather than testing the callback method itself.
+
 
 ### 2.10 Testing Services/POROs (Business Logic Classes)
 
@@ -953,15 +969,19 @@ describe ProjectionCalculator do
 end
 ```
 
+Service specs can exist at different levels of isolation. A service that contains pure calculations can often be tested with plain Ruby objects or doubles. A service that coordinates ActiveRecord objects may reasonably use factories and the test database. The important question is whether the test is focused on the service's behavior and its intended collaborators.
+
 ### 2.11 Best Practices for Unit Tests
 
-#### 1. One Assertion Per Test (Conceptually)
+#### 1. Focus Each Test on One Behavior
+
 ```ruby
 # Good — focuses on one behavior
 it "returns true for valid vehicles" do
   vehicle = build(:vehicle)
   expect(vehicle.valid?).to be(true)
 end
+
 
 # Avoid — mixes multiple unrelated checks
 it "validates the vehicle" do
@@ -973,7 +993,14 @@ it "validates the vehicle" do
 end
 ```
 
-(Exception: Multiple assertions checking related aspects of one outcome are fine.)
+A test should answer one clear question. That may require multiple assertions when those assertions describe different aspects of the same outcome. For example, checking:
+
+```ruby
+expect(response).to have_http_status(:created)
+expect(response.body).to include(vehicle.id.to_s)
+```
+can be perfectly reasonable if both verify the same behavior.
+
 
 #### 2. Use Descriptive Test Names
 ```ruby
@@ -1015,7 +1042,7 @@ end
 ```
 
 #### 4. Keep Tests Fast
-- Use `build_stubbed` for pure logic tests (doesn't hit database)
+- Use `build` or `build_stubbed` when database persistence isn't required.
 - Avoid unnecessary creates; use build when you can
 - Don't make HTTP calls; stub them
 - Run tests frequently to catch regressions early
@@ -1045,11 +1072,7 @@ bundle exec rspec
 open coverage/index.html
 ```
 
-**Coverage targets:**
-- **Models:** 90%+ (these contain business logic; high coverage is crucial)
-- **Services/POROs:** 90%+ (same reason)
-- **Controllers/Requests:** 80%+ (integration tests often cover these)
-- **Don't aim for 100%** — some code is genuinely hard to test (error handling in edge cases) and the effort-to-value ratio gets poor
+Coverage targets should be agreed upon based on the project's risk profile and testing strategy. High coverage is particularly valuable around business-critical models, services, calculations, and workflows, while a lower percentage may be reasonable for boilerplate or framework-driven code.
 
 Focus on:
 - ✅ All business logic paths
@@ -1064,13 +1087,24 @@ Focus on:
 
 ### 3.1 Overview: What Integration Tests Do
 
-An integration test (called a "request spec" in RSpec) simulates a real HTTP request coming into your Rails application and verifies:
-1. The request is routed correctly
-2. The controller/action executes without error
-3. Database changes happen as expected
-4. The response (status, headers, body) is correct
+In Rails applications using RSpec, request specs are commonly used to test
+the application through its HTTP interface.
 
-Unlike unit tests, integration tests exercise multiple layers at once: routing → controller → model → database → response. This catches problems that unit tests can't — like a perfectly correct model method that's never actually called because of a missing route.
+A request spec sends an HTTP request to a Rails endpoint and verifies the
+observable result of that request, such as:
+
+1. The request reaches the expected endpoint.
+2. The application processes the request correctly.
+3. The appropriate database or other application state changes occur.
+4. The response has the expected status, headers, and body.
+
+Unlike a focused unit test, a request spec exercises several application
+layers together. A typical flow may involve:
+
+HTTP request → routing → controller → domain/model/service logic → database → response
+
+This makes request specs useful for verifying that the different parts of
+the application work together correctly.
 
 ### 3.2 Basic Structure of an Integration Test
 
@@ -1082,9 +1116,11 @@ describe "Vehicle Registration", type: :request do
   describe "POST /vehicles" do
     it "creates a new vehicle" do
       # Arrange
+      model = create(:model)
+
       params = {
         registration_number: "KA01AB1234",
-        model_id: create(:model).id,
+        model_id: model.id,
         owner_type: "RB",
         invoice_date: "2026-08-15"
       }
@@ -1109,7 +1145,7 @@ end
 
 ### 3.3 Testing HTTP Requests — The Five Verbs
 
-Rails applications handle five main HTTP verbs. Here's how to test each:
+Rails applications handle five main HTTP verbs. The following examples cover the HTTP methods most commonly used by Rails CRUD endpoints. Here's how to test each:
 
 #### GET — Retrieving Data
 
@@ -1224,12 +1260,12 @@ end
 ### 3.4 Testing Request Parameters and Headers
 
 Requests can include:
-- **Query string** (`?page=1&sort=date`)
+- **Query parameters** (`?page=1&sort=date`)
 - **URL path parameters** (`/vehicles/123`)
-- **Body parameters** (POST/PATCH)
+- **Body parameters** (submitted with POST/PATCH/etc.)
 - **Headers** (authentication, content-type, etc.)
 
-#### Query String Parameters:
+#### Query Parameters:
 
 ```ruby
 describe "GET /vehicles?owner_type=RB" do
@@ -1451,9 +1487,9 @@ describe "GET /vehicles" do
 end
 ```
 
-#### Using Response Matcher (Cleaner):
+#### Using a JSON Matcher (Cleaner):
 
-RSpec has a built-in matcher for JSON responses:
+A JSON matcher such as `include_json` can make response assertions more concise. The matcher shown below is provided by the `rspec_json_expectations` gem.
 
 ```ruby
 describe "GET /vehicles/:id" do
@@ -1478,15 +1514,27 @@ describe "GET /vehicles/:id" do
 end
 ```
 
-(Requires the `rspec_json_expectations` gem for `include_json`. Alternatively, manual parsing with `JSON.parse` is more standard.)
+### 3.7 Testing the HTTP Contract
 
-### 3.7 Testing State Changes — Database Verification
+A request spec should primarily verify what a client of the application can observe:
+- HTTP status
+- response body and structure
+- relevant headers
+- persisted state resulting from the request
+- externally visible side effects
+
+Avoid coupling request specs to controller implementation details such as private methods, internal helper calls, or the exact sequence of method calls.
+
+For example, if `POST /vehicles` creates a vehicle and schedules a projection job, the request spec should verify those observable outcomes rather than asserting that a particular controller method called `ProjectionCalculator` directly.
+
+
+### 3.8 Testing State Changes — Database Verification
 
 Integration tests verify that the request not only returns the right response, but also causes the right database changes:
 
 ```ruby
 describe "POST /vehicles" do
-  it "creates a vehicle and schedules projection job" do
+  it "creates a vehicle" do
     model = create(:model)
     
     expect {
@@ -1546,7 +1594,7 @@ describe "PATCH /invoices/:id/map_to_vehicle" do
 end
 ```
 
-### 3.8 Common Integration Test Patterns
+### 3.9 Common Integration Test Patterns
 
 #### Pattern: Going Live and Mapping Invoices are Independent
 
@@ -1649,7 +1697,7 @@ describe "Authorization" do
 end
 ```
 
-### 3.9 Testing Error Scenarios
+### 3.10 Testing Error Scenarios
 
 Tests should verify that errors are handled gracefully and predictably:
 
@@ -1691,7 +1739,7 @@ describe "Error Handling" do
 end
 ```
 
-### 3.10 Best Practices for Integration Tests
+### 3.11 Best Practices for Integration Tests
 
 #### 1. Test Happy Path and Key Error Paths
 ```ruby
@@ -1758,7 +1806,7 @@ end
 ```
 
 #### 4. Clean Up After Yourself
-Most of the time, Rails transactions handle this automatically, but for side effects (files, external APIs):
+Rails transactional fixtures normally clean up database state between tests. Tests that create external side effects — temporary files, uploaded files, external resources, etc. — may require explicit cleanup.
 
 ```ruby
 # Good — clean up explicitly
@@ -1791,9 +1839,9 @@ describe Vehicle do
 end
 ```
 
-### 3.11 Structuring Request Specs for Your App
+### 3.12 Structuring Request Specs for Your App
 
-For the Service Projections app, organize your request specs by feature/endpoint:
+Application-specific example: Service Projections request-spec organization by feature/endpoint:
 
 ```
 spec/requests/
@@ -2212,7 +2260,7 @@ For this project, do not feel pressured to treat them as mandatory for every fea
 
 ---
 
-## 6. Rails-Specific Testing Patterns and Critical Practices
+## 6. Rails-Specific Testing Patterns, Anti-Patterns & Coverage
 
 ### 6.1 Focus on the Rails behaviors that break apps
 
@@ -2352,94 +2400,23 @@ Most important contract checks:
 
 This is often more valuable than testing every implementation detail.
 
-### 6.10 Avoid the most common anti-patterns
+### 6.10 Common anti-patterns to avoid
 
-Avoid these patterns in a Rails codebase:
-- testing implementation details instead of behavior
-- writing giant tests that do multiple unrelated things
-- creating brittle tests tied to exact HTML structure
-- depending on test order
-- reusing global state across examples
-- testing the same rule in five different layers unnecessarily
-- relying on real external systems in CI
-
-A good Rails test answers one business question clearly and fails for one valid reason.
-
-### 6.11 The highest-value test mix for this app
-
-For the Service Projections app, the most valuable test stack is:
-- Unit tests for projection rules, service thresholds, owner-type logic, and lapse logic
-- Request tests for register / map invoice / project service / status change flows
-- Job tests for sweeper and notification workers
-- A few system tests only for critical user journeys
-
-This gives strong confidence without over-investing in slow browser-level tests.
-
-### 6.12 Final principle
-
-Keep the test suite readable, realistic, and focused on the actual business contract.
-
-If a test does not protect a real business risk or a real lifecycle behavior, it is probably not worth keeping at high priority.
-
----
-
-## 7. Common Testing Patterns, Anti-Patterns, and Coverage
-
-### 7.1 Why a dedicated section is useful
-
-Some of the guidance in this section overlaps with earlier material, but a short dedicated section is still useful because it captures the team standards that matter most in daily work:
-- what good tests look like
-- what to avoid
-- how to measure whether the suite is strong enough
-
-This helps keep the testing culture consistent as the app grows.
-
-### 7.2 Good testing patterns to follow
-
-Use these as default rules for the team:
-- Test behavior, not implementation details.
-- One test should answer one business question.
-- Prefer realistic data over synthetic shortcuts.
-- Use factories for variations and traits for common scenarios.
-- Keep model tests focused on rules and edge cases.
-- Keep request tests focused on contracts and state changes.
-- Keep job tests focused on side effects and failure handling.
-- Keep system tests limited to critical user journeys.
-
-### 7.3 Common anti-patterns to avoid
-
-Avoid these practices because they create slow, brittle, and low-value tests:
-- asserting on private method calls instead of user-visible output
-- testing the same rule in too many layers
-- writing giant tests that mix multiple scenarios
-- relying on global shared state between examples
-- depending on database order or test execution order
-- hard-coding fragile HTML or CSS selectors in system tests
-- using real third-party APIs in CI
+Avoid these patterns — they create slow, brittle, low-value tests:
+- testing implementation details or private method calls instead of user-visible behavior
+- writing giant tests that mix multiple unrelated scenarios
+- creating brittle tests tied to exact HTML/CSS structure in system tests
+- depending on test execution order or database record order
+- reusing or relying on global shared state across examples
+- testing the same rule in several layers unnecessarily
+- relying on real third-party/external systems in CI
 - testing current date/time without freezing it
 
-If a test is hard to understand, it is usually too broad or too coupled to internals.
+If a test is hard to understand, it's usually too broad or too coupled to internals. If it doesn't protect a real business risk or lifecycle behavior, it's probably not worth keeping at high priority.
 
-### 7.4 Coverage: useful, but not the only objective
+### 6.11 Coverage: useful, but not the only objective
 
-We use `SimpleCov` to measure how much of the application code is exercised by tests. This is useful because it tells us whether key business logic is being covered consistently.
-
-Example setup from Section 1:
-
-```ruby
-# spec/spec_helper.rb
-require 'simplecov'
-
-SimpleCov.start 'rails' do
-  add_filter '/spec/'
-  add_filter '/config/'
-  add_filter '/db/'
-end
-```
-
-### 7.5 Practical coverage guidance
-
-Coverage is a helpful signal, but it should not become the sole goal.
+We use `SimpleCov` to measure how much of the application code is exercised by tests (setup covered in Section 1.7). This is a helpful signal for whether key business logic is being covered consistently — but it should not become the sole goal.
 
 For this project, a sensible focus is:
 - model logic: high coverage
@@ -2450,14 +2427,15 @@ For this project, a sensible focus is:
 
 A suite with 90%+ coverage in the rule-heavy and background-job-heavy parts of the app is generally much more valuable than a suite that hits 100% of trivial code but misses the risky cases.
 
-### 7.6 Recommended team policy
+### 6.12 Recommended team policy
 
-The team should follow this policy:
 - Do not merge code that breaks a relevant existing test.
 - Add tests when changing business logic, especially in projection rules and status transitions.
 - Use coverage as a review aid, not as a target to chase blindly.
 - Prefer meaningful business coverage over inflated percentages.
 
-This keeps the suite useful, maintainable, and aligned with real production risk.
+### 6.13 Final principle
+
+Keep the test suite readable, realistic, and focused on the actual business contract. A good Rails test answers one business question clearly and fails for one valid reason — if a test doesn't protect a real business risk, it's not worth keeping at high priority.
 
 ---
