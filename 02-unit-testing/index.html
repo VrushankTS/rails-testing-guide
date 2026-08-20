@@ -1250,11 +1250,13 @@
   end
 end
 </code></pre>
-<p><strong>Breaking it down:</strong>
-- <code>describe</code> — top-level grouping for a class or feature
-- <code>context</code> — a specific scenario or condition (optional, but improves readability)
-- <code>it</code> — defines a single example that describes one behavior or outcome
-- Arrange → Act → Assert — the three steps of every test</p>
+<p><strong>Breaking it down:</strong></p>
+<ul>
+<li><code>describe</code> — top-level grouping for a class or feature</li>
+<li><code>context</code> — a specific scenario or condition (optional, but improves readability)</li>
+<li><code>it</code> — defines a single example that describes one behavior or outcome</li>
+<li>Arrange → Act → Assert — the three steps of every test</li>
+</ul>
 <h3 id="23-testing-models-validations">2.3 Testing Models — Validations</h3>
 <p>Rails models have built-in validation rules. Here's how to test them:</p>
 <h4 id="example-model">Example Model:</h4>
@@ -1585,11 +1587,13 @@ gearless_vehicles = create_list(:vehicle, 3, :gearless)
 lapsed_geared_vehicle = create(:vehicle, :geared, :overdue_for_service)
 </code></pre>
 <h3 id="28-controlling-time-and-stubbing-external-dependencies">2.8 Controlling Time and Stubbing External Dependencies</h3>
-<p>Real code often depends on things outside your control:
-- Current time (Date.today, Time.now)
-- External APIs (invoice scanning service, SMS provider)
-- Randomness
-- File operations</p>
+<p>Real code often depends on things outside your control:</p>
+<ul>
+<li>Current time (Date.today, Time.now)</li>
+<li>External APIs (invoice scanning service, SMS provider)</li>
+<li>Randomness</li>
+<li>File operations</li>
+</ul>
 <p>In tests, you want to isolate your logic from these. Use mocking:</p>
 <h4 id="controlling-time-in-tests-very-common">Controlling Time in Tests (Very Common):</h4>
 <pre><code class="language-ruby"># app/models/projection.rb
@@ -1859,11 +1863,13 @@ end
 open coverage/index.html
 </code></pre>
 <p>Coverage targets should be agreed upon based on the project's risk profile and testing strategy. High coverage is particularly valuable around business-critical models, services, calculations, and workflows, while a lower percentage may be reasonable for boilerplate or framework-driven code.</p>
-<p>Focus on:
-- ✅ All business logic paths
-- ✅ Error/edge cases
-- ❌ Trivial getters/setters
-- ❌ Boilerplate Rails configuration</p>
+<p>Focus on:</p>
+<ul>
+<li>✅ All business logic paths</li>
+<li>✅ Error/edge cases</li>
+<li>❌ Trivial getters/setters</li>
+<li>❌ Boilerplate Rails configuration</li>
+</ul>
 <hr />
 
 

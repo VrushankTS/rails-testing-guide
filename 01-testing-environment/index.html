@@ -1132,10 +1132,12 @@ end
 <p>If you're starting from scratch, generate RSpec config:</p>
 <pre><code class="language-bash">bundle exec rails generate rspec:install
 </code></pre>
-<p>This creates:
-- <code>.rspec</code> — command-line options for the <code>rspec</code> command
-- <code>spec/spec_helper.rb</code> — shared RSpec setup
-- <code>spec/rails_helper.rb</code> — Rails-specific RSpec setup</p>
+<p>This creates:</p>
+<ul>
+<li><code>.rspec</code> — command-line options for the <code>rspec</code> command</li>
+<li><code>spec/spec_helper.rb</code> — shared RSpec setup</li>
+<li><code>spec/rails_helper.rb</code> — Rails-specific RSpec setup</li>
+</ul>
 <h4 id="key-configuration-in-specrails_helperrb">Key Configuration in <code>spec/rails_helper.rb</code></h4>
 <pre><code class="language-ruby"># spec/rails_helper.rb
 
@@ -1282,10 +1284,12 @@ jobs:
       - run: bundle exec rspec
       - run: bundle exec rubocop  # Optional: static code quality
 </code></pre>
-<p>This ensures:
-- Tests run on every push and pull request
-- When configured as a required status check, failing tests can prevent a PR from being merged
-- Developers get immediate feedback</p>
+<p>This ensures:</p>
+<ul>
+<li>Tests run on every push and pull request</li>
+<li>When configured as a required status check, failing tests can prevent a PR from being merged</li>
+<li>Developers get immediate feedback</li>
+</ul>
 <h3 id="112-debugging-tests">1.12 Debugging Tests</h3>
 <h4 id="see-actual-vs-expected-values">See actual vs. expected values:</h4>
 <pre><code class="language-ruby">expect(actual).to eq(expected)  # Shows diff if not equal

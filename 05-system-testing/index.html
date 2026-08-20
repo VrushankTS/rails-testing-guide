@@ -664,33 +664,41 @@
 
 <h3 id="51-why-system-tests-are-useful-but-not-the-main-layer">5.1 Why system tests are useful, but not the main layer</h3>
 <p>System tests, usually implemented with Capybara, simulate a real browser session and exercise the application the way a user would: click links, fill forms, submit pages, wait for content, and assert that the page changes as expected.</p>
-<p>These tests are valuable because they catch failures that only show up when the entire application stack works together:
-- the page loads with the right layout
-- the form submits correctly
-- validation messages appear in the browser
-- JavaScript-driven UI updates work as expected
-- navigation and route flow remain intact</p>
-<p>However, they are not the primary layer for most Rails business logic. In a rules-heavy backend project, the majority of confidence should come from:
-- model/unit tests for domain logic
-- request/integration tests for controller and API behavior
-- job tests for background processing</p>
+<p>These tests are valuable because they catch failures that only show up when the entire application stack works together:</p>
+<ul>
+<li>the page loads with the right layout</li>
+<li>the form submits correctly</li>
+<li>validation messages appear in the browser</li>
+<li>JavaScript-driven UI updates work as expected</li>
+<li>navigation and route flow remain intact</li>
+</ul>
+<p>However, they are not the primary layer for most Rails business logic. In a rules-heavy backend project, the majority of confidence should come from:</p>
+<ul>
+<li>model/unit tests for domain logic</li>
+<li>request/integration tests for controller and API behavior</li>
+<li>job tests for background processing</li>
+</ul>
 <p>System tests are a smaller, more expensive layer and should be used selectively.</p>
 <h3 id="52-when-to-use-capybarasystem-tests">5.2 When to use Capybara/system tests</h3>
 <p>Use them when the user journey is important enough that a backend-only test would be insufficient.</p>
-<p>Good candidates include:
-- vehicle registration flow
-- posting a completed service / updating service status
-- mapping invoice to vehicle and confirming the result on screen
-- login or role-based access flows
-- approval or rejection workflows
-- any multi-step journey that users actually rely on</p>
+<p>Good candidates include:</p>
+<ul>
+<li>vehicle registration flow</li>
+<li>posting a completed service / updating service status</li>
+<li>mapping invoice to vehicle and confirming the result on screen</li>
+<li>login or role-based access flows</li>
+<li>approval or rejection workflows</li>
+<li>any multi-step journey that users actually rely on</li>
+</ul>
 <p>These are the kinds of workflows where a request spec may pass but the real browser flow still fails because of UI or JavaScript issues.</p>
 <h3 id="53-when-not-to-use-them-aggressively">5.3 When not to use them aggressively</h3>
-<p>Avoid making Capybara the default test layer for every rule or every database validation. This usually leads to:
-- slow test runs
-- brittle tests that break due to minor markup changes
-- excessive maintenance cost
-- lower confidence in the actual business rules because the tests are too high-level and too slow to run often</p>
+<p>Avoid making Capybara the default test layer for every rule or every database validation. This usually leads to:</p>
+<ul>
+<li>slow test runs</li>
+<li>brittle tests that break due to minor markup changes</li>
+<li>excessive maintenance cost</li>
+<li>lower confidence in the actual business rules because the tests are too high-level and too slow to run often</li>
+</ul>
 <p>For a backend-heavy Rails app or a Service Projections system, it is usually better to keep system tests limited to a few critical journeys rather than trying to cover every rule through the browser.</p>
 <h3 id="54-common-capybara-patterns">5.4 Common Capybara patterns</h3>
 <p>A basic Capybara example:</p>
@@ -719,15 +727,17 @@ end
 </code></pre>
 <p>This checks real browser behavior, not just app logic. It verifies the workflow from the user's point of view.</p>
 <h3 id="55-typical-browser-interactions-to-test">5.5 Typical browser interactions to test</h3>
-<p>System tests should cover the critical user actions, for example:
-- <code>visit</code> a page
-- <code>fill_in</code> form fields
-- <code>select</code> dropdown values
-- <code>check</code> or <code>uncheck</code> checkboxes
-- <code>click_button</code> or <code>click_link</code>
-- <code>have_content</code> to assert page text appears
-- <code>have_current_path</code> to assert navigation
-- <code>have_css</code> or <code>have_selector</code> for more structured DOM assertions</p>
+<p>System tests should cover the critical user actions, for example:</p>
+<ul>
+<li><code>visit</code> a page</li>
+<li><code>fill_in</code> form fields</li>
+<li><code>select</code> dropdown values</li>
+<li><code>check</code> or <code>uncheck</code> checkboxes</li>
+<li><code>click_button</code> or <code>click_link</code></li>
+<li><code>have_content</code> to assert page text appears</li>
+<li><code>have_current_path</code> to assert navigation</li>
+<li><code>have_css</code> or <code>have_selector</code> for more structured DOM assertions</li>
+</ul>
 <p>Example:</p>
 <pre><code class="language-ruby">it &quot;shows validation errors for invalid input&quot; do
   visit &quot;/vehicles/new&quot;
@@ -739,24 +749,30 @@ end
 </code></pre>
 <h3 id="56-for-backend-heavy-apps-keep-them-small-and-purposeful">5.6 For backend-heavy apps, keep them small and purposeful</h3>
 <p>In projects like this one, system tests are best used for very targeted workflows, not for exhaustive business coverage.</p>
-<p>A practical rule:
-- Unit tests = cover the business rules
-- Request/integration tests = cover API and controller contracts
-- Job tests = cover asynchronous behavior
-- System tests = cover 2–5 critical user journeys only</p>
-<p>Example critical journeys for this project:
-- Register a vehicle and see it appear as live / pending invoice
-- Map an invoice and confirm projection is triggered
-- View the service due state on the dashboard
-- Submit a service completion and verify the correct status updates</p>
+<p>A practical rule:</p>
+<ul>
+<li>Unit tests = cover the business rules</li>
+<li>Request/integration tests = cover API and controller contracts</li>
+<li>Job tests = cover asynchronous behavior</li>
+<li>System tests = cover 2–5 critical user journeys only</li>
+</ul>
+<p>Example critical journeys for this project:</p>
+<ul>
+<li>Register a vehicle and see it appear as live / pending invoice</li>
+<li>Map an invoice and confirm projection is triggered</li>
+<li>View the service due state on the dashboard</li>
+<li>Submit a service completion and verify the correct status updates</li>
+</ul>
 <h3 id="57-avoiding-brittle-system-tests">5.7 Avoiding brittle system tests</h3>
-<p>Capybara tests can become flaky if overused. To keep them maintainable:
-- write only for the most important user paths
-- avoid testing every text variation or repeated HTML structure
-- prefer stable selectors like visible labels or data-test attributes
-- use <code>have_text</code>/<code>have_content</code> only for user-visible text
-- avoid depending on exact timing unless necessary
-- keep tests isolated and independent from one another</p>
+<p>Capybara tests can become flaky if overused. To keep them maintainable:</p>
+<ul>
+<li>write only for the most important user paths</li>
+<li>avoid testing every text variation or repeated HTML structure</li>
+<li>prefer stable selectors like visible labels or data-test attributes</li>
+<li>use <code>have_text</code>/<code>have_content</code> only for user-visible text</li>
+<li>avoid depending on exact timing unless necessary</li>
+<li>keep tests isolated and independent from one another</li>
+</ul>
 <p>A more stable practice is to use specific selectors in the app, for example:</p>
 <pre><code class="language-html">&lt;button data-testid=&quot;save-vehicle-button&quot;&gt;Save&lt;/button&gt;
 </code></pre>
@@ -765,11 +781,13 @@ end
 </code></pre>
 <p>This is far less likely to break than relying on page structure or vague CSS selectors.</p>
 <h3 id="58-a-realistic-testing-balance-for-this-application">5.8 A realistic testing balance for this application</h3>
-<p>For a Service Projections app, a balanced strategy is:
-- Use unit tests to cover vehicle type rules, lapse logic, service thresholds, and projection decisions
-- Use request specs to test controller/API actions and state changes
-- Use job specs to cover sweeper, notification, projection workers
-- Use a few Capybara/system tests for the workflows that matter most to the business and the user experience</p>
+<p>For a Service Projections app, a balanced strategy is:</p>
+<ul>
+<li>Use unit tests to cover vehicle type rules, lapse logic, service thresholds, and projection decisions</li>
+<li>Use request specs to test controller/API actions and state changes</li>
+<li>Use job specs to cover sweeper, notification, projection workers</li>
+<li>Use a few Capybara/system tests for the workflows that matter most to the business and the user experience</li>
+</ul>
 <p>This is the sane default for Rails teams that do significant backend development but also have real browser-based actions.</p>
 <h3 id="59-final-guidance">5.9 Final guidance</h3>
 <p>Capybara/system tests are significant because they validate the browser experience, but they are not the backbone of a rules-heavy Rails application. They are a valuable top layer, not the foundation.</p>

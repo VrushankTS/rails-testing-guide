@@ -1261,11 +1261,13 @@ describe &quot;Vehicle Registration&quot;, type: :request do
   end
 end
 </code></pre>
-<p><strong>Key differences from unit tests:</strong>
-- Uses <code>post</code>, <code>get</code>, <code>patch</code>, <code>delete</code> to simulate HTTP verbs
-- Checks <code>response</code> status and body
-- Verifies database state after the request
-- Tests the actual URL path, not just the method</p>
+<p><strong>Key differences from unit tests:</strong></p>
+<ul>
+<li>Uses <code>post</code>, <code>get</code>, <code>patch</code>, <code>delete</code> to simulate HTTP verbs</li>
+<li>Checks <code>response</code> status and body</li>
+<li>Verifies database state after the request</li>
+<li>Tests the actual URL path, not just the method</li>
+</ul>
 <h3 id="33-testing-http-requests-the-five-verbs">3.3 Testing HTTP Requests — The Five Verbs</h3>
 <p>Rails applications handle five main HTTP verbs. The following examples cover the HTTP methods most commonly used by Rails CRUD endpoints. Here's how to test each:</p>
 <h4 id="get-retrieving-data">GET — Retrieving Data</h4>
@@ -1367,11 +1369,13 @@ end
 end
 </code></pre>
 <h3 id="34-testing-request-parameters-and-headers">3.4 Testing Request Parameters and Headers</h3>
-<p>Requests can include:
-- <strong>Query parameters</strong> (<code>?page=1&amp;sort=date</code>)
-- <strong>URL path parameters</strong> (<code>/vehicles/123</code>)
-- <strong>Body parameters</strong> (submitted with POST/PATCH/etc.)
-- <strong>Headers</strong> (authentication, content-type, etc.)</p>
+<p>Requests can include:</p>
+<ul>
+<li><strong>Query parameters</strong> (<code>?page=1&amp;sort=date</code>)</li>
+<li><strong>URL path parameters</strong> (<code>/vehicles/123</code>)</li>
+<li><strong>Body parameters</strong> (submitted with POST/PATCH/etc.)</li>
+<li><strong>Headers</strong> (authentication, content-type, etc.)</li>
+</ul>
 <h4 id="query-parameters">Query Parameters:</h4>
 <pre><code class="language-ruby">describe &quot;GET /vehicles?owner_type=RB&quot; do
   it &quot;filters vehicles by owner type&quot; do
@@ -1472,11 +1476,13 @@ end
   end
 end
 </code></pre>
-<p>Common status code symbols in RSpec:
-- <code>:ok</code> (200), <code>:created</code> (201), <code>:no_content</code> (204)
-- <code>:bad_request</code> (400), <code>:unauthorized</code> (401), <code>:forbidden</code> (403), <code>:not_found</code> (404)
-- <code>:unprocessable_entity</code> (422)
-- <code>:internal_server_error</code> (500)</p>
+<p>Common status code symbols in RSpec:</p>
+<ul>
+<li><code>:ok</code> (200), <code>:created</code> (201), <code>:no_content</code> (204)</li>
+<li><code>:bad_request</code> (400), <code>:unauthorized</code> (401), <code>:forbidden</code> (403), <code>:not_found</code> (404)</li>
+<li><code>:unprocessable_entity</code> (422)</li>
+<li><code>:internal_server_error</code> (500)</li>
+</ul>
 <h3 id="36-testing-response-body-json-structure-and-content">3.6 Testing Response Body — JSON Structure and Content</h3>
 <p>For APIs, the response body (usually JSON) is as important as the status code:</p>
 <pre><code class="language-ruby"># app/controllers/vehicles_controller.rb
@@ -1594,12 +1600,14 @@ end
 end
 </code></pre>
 <h3 id="37-testing-the-http-contract">3.7 Testing the HTTP Contract</h3>
-<p>A request spec should primarily verify what a client of the application can observe:
-- HTTP status
-- response body and structure
-- relevant headers
-- persisted state resulting from the request
-- externally visible side effects</p>
+<p>A request spec should primarily verify what a client of the application can observe:</p>
+<ul>
+<li>HTTP status</li>
+<li>response body and structure</li>
+<li>relevant headers</li>
+<li>persisted state resulting from the request</li>
+<li>externally visible side effects</li>
+</ul>
 <p>Avoid coupling request specs to controller implementation details such as private methods, internal helper calls, or the exact sequence of method calls.</p>
 <p>For example, if <code>POST /vehicles</code> creates a vehicle and schedules a projection job, the request spec should verify those observable outcomes rather than asserting that a particular controller method called <code>ProjectionCalculator</code> directly.</p>
 <h3 id="38-testing-state-changes-database-verification">3.8 Testing State Changes — Database Verification</h3>

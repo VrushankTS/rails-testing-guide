@@ -663,9 +663,11 @@
   <h1>4. Background Job / Worker Testing</h1>
 
 <h3 id="41-overview">4.1 Overview</h3>
-<p>Background processing is a core part of the Service Projections app: projections are calculated in the background, the sweeper periodically scans the fleet, and notification workers alert users when a projection enters a buffer window. Tests for jobs focus on two things:
-- Was the job enqueued when it should have been? (contract test)
-- When the job runs, does it produce the expected side effects? (behavior test)</p>
+<p>Background processing is a core part of the Service Projections app: projections are calculated in the background, the sweeper periodically scans the fleet, and notification workers alert users when a projection enters a buffer window. Tests for jobs focus on two things:</p>
+<ul>
+<li>Was the job enqueued when it should have been? (contract test)</li>
+<li>When the job runs, does it produce the expected side effects? (behavior test)</li>
+</ul>
 <p>Jobs can be tested at both levels without touching the real queueing backend (Sidekiq/Resque) using the Rails test adapters or Sidekiq's testing helpers.</p>
 <h3 id="42-configure-test-adapters">4.2 Configure Test Adapters</h3>
 <p>For ActiveJob (Rails' abstraction over background backends) use the test adapter in <code>spec/rails_helper.rb</code> or per-spec:</p>
@@ -809,12 +811,14 @@ end
 <p>Sidekiq-specific retry tests can assert that the job ended up in the retry set when using <code>Sidekiq::Testing.fake!</code>, or use <code>Sidekiq::Testing.inline!</code> and check behavior on exception.</p>
 <h3 id="48-common-pitfalls-how-to-avoid-them">4.8 Common Pitfalls &amp; How to Avoid Them</h3>
 <ul>
-<li>Transactional tests and background jobs: If a job runs in a separate thread or process, it may not see records created inside an RSpec transaction. Solutions:</li>
+<li>
+<p>Transactional tests and background jobs: If a job runs in a separate thread or process, it may not see records created inside an RSpec transaction. Solutions:</p>
+<ul>
 <li>Use the test adapter (<code>ActiveJob::Base.queue_adapter = :test</code>) and <code>perform_enqueued_jobs</code> so jobs execute inline in the same thread.</li>
 <li>For Sidekiq, use <code>Sidekiq::Testing.inline!</code> for tests that must execute jobs immediately.</li>
 <li>When a job is queued in an <code>after_commit</code> callback, ensure the commit happens before asserting the job was enqueued — use <code>create(:record)</code> (not build) so callbacks run.</li>
-<li>
-<p>If needed, disable transactional fixtures for a test and use database_cleaner or explicit cleanup.</p>
+<li>If needed, disable transactional fixtures for a test and use database_cleaner or explicit cleanup.</li>
+</ul>
 </li>
 <li>
 <p>Flaky tests from external services: Always stub HTTP calls (WebMock/VCR) or provide a fake adapter for sending SMS/email.</p>
