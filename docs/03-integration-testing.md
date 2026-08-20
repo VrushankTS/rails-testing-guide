@@ -1,5 +1,3 @@
-## 3. Integration Testing in Rails — Request/Controller Testing
-
 ### 3.1 Overview: What Integration Tests Do
 
 In Rails applications using RSpec, request specs are commonly used to test

@@ -1,5 +1,3 @@
-## 4. Background Job / Worker Testing
-
 ### 4.1 Overview
 
 Background processing is a core part of the Service Projections app: projections are calculated in the background, the sweeper periodically scans the fleet, and notification workers alert users when a projection enters a buffer window. Tests for jobs focus on two things:

@@ -1,5 +1,3 @@
-## 1. Testing Environment & Setup
-
 ### 1.1 The Rails Testing Ecosystem
 
 A standard Rails project uses several layers of testing tools that work together. Here's what each does:

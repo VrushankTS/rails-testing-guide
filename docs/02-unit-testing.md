@@ -1,5 +1,3 @@
-## 2. Unit Testing in Rails — Patterns & Practices
-
 ### 2.1 Overview: What Unit Tests Do
 
 A unit test focuses on a relatively small unit of behavior and verifies that it behaves correctly under specific conditions.
