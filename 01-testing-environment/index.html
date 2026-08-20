@@ -1,0 +1,1411 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../02-unit-testing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>1. Testing Environment & Setup - Rails Testing Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-testing-environment-setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Rails Testing Guide" class="md-header__button md-logo" aria-label="Rails Testing Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rails Testing Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1. Testing Environment & Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Rails Testing Guide" class="md-nav__button md-logo" aria-label="Rails Testing Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Rails Testing Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Testing Environment & Setup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Testing Environment & Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-testing-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Testing Environment &amp; Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Testing Environment &amp; Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-the-rails-testing-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 The Rails Testing Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-gemfile-dependencies-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Gemfile Dependencies for Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-setting-up-rspec-in-a-rails-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Setting Up RSpec in a Rails Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Setting Up RSpec in a Rails Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-configuration-in-specrails_helperrb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Configuration in spec/rails_helper.rb
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-setting-up-factory-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Setting Up Factory Bot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-setting-up-shoulda-matchers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Setting Up Shoulda Matchers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-setting-up-simplecov-for-coverage-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Setting Up SimpleCov for Coverage Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-the-test-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 The Test Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Running Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9 Running Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-all-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run all tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-specific-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a specific file:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-specific-line-test-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a specific line (test case):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-all-tests-matching-a-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run all tests matching a pattern:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-only-one-type-of-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run only one type of test:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-tests-with-verbose-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run tests with verbose output:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-with-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run with coverage:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-in-parallel-if-you-install-the-parallel_tests-gem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run in parallel (if you install the parallel_tests gem):
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-configuration-in-rspec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Configuration in .rspec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 CI/CD Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-debugging-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 Debugging Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.12 Debugging Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#see-actual-vs-expected-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See actual vs. expected values:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-debug-output-to-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add debug output to tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-debugger-within-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a debugger within tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#see-what-sql-is-being-executed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See what SQL is being executed:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-unit-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Unit Testing in Rails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-integration-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Integration Testing in Rails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-background-jobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Background Job / Worker Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-system-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. System / End-to-End Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-testing-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Rails-Specific Testing Patterns, Anti-Patterns & Coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-testing-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Testing Environment &amp; Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Testing Environment &amp; Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-the-rails-testing-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 The Rails Testing Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-gemfile-dependencies-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Gemfile Dependencies for Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-setting-up-rspec-in-a-rails-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Setting Up RSpec in a Rails Project
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Setting Up RSpec in a Rails Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-configuration-in-specrails_helperrb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Configuration in spec/rails_helper.rb
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-setting-up-factory-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Setting Up Factory Bot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-setting-up-shoulda-matchers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Setting Up Shoulda Matchers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-setting-up-simplecov-for-coverage-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Setting Up SimpleCov for Coverage Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-the-test-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8 The Test Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9 Running Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9 Running Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-all-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run all tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-specific-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a specific file:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-a-specific-line-test-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a specific line (test case):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-all-tests-matching-a-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run all tests matching a pattern:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-only-one-type-of-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run only one type of test:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-tests-with-verbose-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run tests with verbose output:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-with-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run with coverage:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-in-parallel-if-you-install-the-parallel_tests-gem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run in parallel (if you install the parallel_tests gem):
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-configuration-in-rspec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10 Configuration in .rspec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11 CI/CD Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-debugging-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.12 Debugging Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.12 Debugging Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#see-actual-vs-expected-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See actual vs. expected values:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-debug-output-to-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add debug output to tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-debugger-within-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a debugger within tests:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#see-what-sql-is-being-executed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See what SQL is being executed:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>1. Testing Environment & Setup</h1>
+
+<h2 id="1-testing-environment-setup">1. Testing Environment &amp; Setup</h2>
+<h3 id="11-the-rails-testing-ecosystem">1.1 The Rails Testing Ecosystem</h3>
+<p>A standard Rails project uses several layers of testing tools that work together. Here's what each does:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Installed by?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RSpec</strong></td>
+<td>Test runner and assertion library (replaces Rails' built-in Minitest)</td>
+<td>Explicitly added gem</td>
+</tr>
+<tr>
+<td><strong>Factory Bot</strong></td>
+<td>Generates test data on demand (instead of static fixtures)</td>
+<td>Explicitly added gem</td>
+</tr>
+<tr>
+<td><strong>Shoulda Matchers</strong></td>
+<td>Pre-built assertions for common Rails patterns (validations, associations, callbacks)</td>
+<td>Explicitly added gem</td>
+</tr>
+<tr>
+<td><strong>VCR</strong></td>
+<td>Records and replays HTTP interactions to avoid hitting real APIs during tests</td>
+<td>Explicitly added gem</td>
+</tr>
+<tr>
+<td><strong>Capybara</strong></td>
+<td>Provides a browser-like DSL for system tests (visiting pages, clicking links, filling forms, etc.)</td>
+<td>Added/configured as part of the system-testing stack</td>
+</tr>
+<tr>
+<td><strong>SimpleCov</strong></td>
+<td>Measures test coverage (% of code actually exercised by tests)</td>
+<td>Explicitly added gem</td>
+</tr>
+<tr>
+<td><strong>Faker</strong></td>
+<td>Generates realistic fake data (names, emails, phone numbers, etc.)</td>
+<td>Often paired with Factory Bot</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-gemfile-dependencies-for-testing">1.2 Gemfile Dependencies for Testing</h3>
+<p>Your test group in <code>Gemfile</code> should include:</p>
+<pre><code class="language-ruby">group :test do
+  gem 'rspec-rails'              # RSpec integration with Rails
+  gem 'factory_bot_rails'        # Generate test data
+  gem 'shoulda-matchers'         # Pre-built matchers for validations, associations
+  gem 'faker'                    # Realistic fake data generation
+  gem 'vcr'                      # Record/replay HTTP interactions
+  gem 'webmock'                  # Stub HTTP requests; commonly used with VCR
+  gem 'simplecov'                # Code coverage measurement
+  gem 'rspec-its'                # One-liner test syntax (optional, but nice for simple checks)
+end
+</code></pre>
+<p>Install these with:</p>
+<pre><code class="language-bash">bundle install
+</code></pre>
+<h3 id="13-directory-structure">1.3 Directory Structure</h3>
+<p>After generating a Rails app, your test files live in the <code>spec/</code> folder (because we use RSpec, not the default <code>test/</code> folder):</p>
+<pre><code>spec/
+├── models/              # Model specs
+├── requests/            # Request/integration specs
+├── jobs/                # Background job specs
+├── services/            # Service/PORO specs
+├── system/              # System/end-to-end specs
+├── support/             # Shared examples, helpers, custom matchers
+├── fixtures/            # Optional static test data
+├── vcr_cassettes/       # VCR recordings, if VCR is used
+└── spec_helper.rb
+</code></pre>
+<p>(Please note that <strong>the exact directory structure is not a mandatory Rails/RSpec requirement</strong>. They're a recommended organizational convention.)</p>
+<h3 id="14-setting-up-rspec-in-a-rails-project">1.4 Setting Up RSpec in a Rails Project</h3>
+<p>If you're starting from scratch, generate RSpec config:</p>
+<pre><code class="language-bash">bundle exec rails generate rspec:install
+</code></pre>
+<p>This creates:
+- <code>.rspec</code> — command-line options for the <code>rspec</code> command
+- <code>spec/spec_helper.rb</code> — shared RSpec setup
+- <code>spec/rails_helper.rb</code> — Rails-specific RSpec setup</p>
+<h4 id="key-configuration-in-specrails_helperrb">Key Configuration in <code>spec/rails_helper.rb</code></h4>
+<pre><code class="language-ruby"># spec/rails_helper.rb
+
+require 'spec_helper'
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('config/environment', __dir__)
+
+abort(&quot;The Rails environment is running in production mode!&quot;) if Rails.env.production?
+
+require 'rspec/rails'
+
+# Database configuration is automatic; Rails maintains a separate test database
+
+RSpec.configure do |config|
+  # Use ActiveRecord's database transactions to roll back changes after each test
+  config.use_transactional_fixtures = true
+
+  # Infer spec location from file path (models/user_spec.rb tests the User model)
+  config.infer_spec_type_from_file_location!
+end
+</code></pre>
+<p>This does several important things:
+- Loads your Rails app with <code>ENV['RAILS_ENV'] = 'test'</code>
+- Enables transactional test isolation, so database changes made within a test are rolled back after the test completes.
+- Maps file locations to spec types (so RSpec knows a file in <code>spec/models/</code> is a model test)</p>
+<h3 id="15-setting-up-factory-bot">1.5 Setting Up Factory Bot</h3>
+<p>Factory Bot needs to know where your factories are defined. Create <code>spec/support/factory_bot.rb</code>:</p>
+<pre><code class="language-ruby"># spec/support/factory_bot.rb
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
+</code></pre>
+<p>Then require it in <code>spec/rails_helper.rb</code>:</p>
+<pre><code class="language-ruby"># spec/rails_helper.rb
+require 'support/factory_bot'
+</code></pre>
+<p>This gives you access to <code>create</code>, <code>build</code>, <code>build_stubbed</code> etc. in any test without prefixing them with <code>FactoryBot.</code>.</p>
+<h3 id="16-setting-up-shoulda-matchers">1.6 Setting Up Shoulda Matchers</h3>
+<p>In <code>spec/rails_helper.rb</code>, add:</p>
+<pre><code class="language-ruby"># spec/rails_helper.rb
+require 'shoulda/matchers'
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+</code></pre>
+<h3 id="17-setting-up-simplecov-for-coverage-reports">1.7 Setting Up SimpleCov for Coverage Reports</h3>
+<p>In <code>spec/spec_helper.rb</code>, at the <strong>very top</strong> (before any other requires):</p>
+<pre><code class="language-ruby"># spec/spec_helper.rb
+require 'simplecov'
+
+SimpleCov.start 'rails' do
+  add_filter '/spec/'
+  add_filter '/config/'
+  add_filter '/db/'
+end
+</code></pre>
+<p>After running tests, SimpleCov generates an HTML report in <code>coverage/index.html</code>:</p>
+<pre><code class="language-bash">bundle exec rspec
+# ... tests run ...
+# Then open coverage/index.html in your browser to see percentage of measured application code executed by the test suite
+</code></pre>
+<h3 id="18-the-test-database">1.8 The Test Database</h3>
+<ul>
+<li>Rails uses a separate database for the <code>test</code> environment, so tests do not normally operate on your development data.</li>
+<li>When transactional fixtures are enabled, database changes made during a test are wrapped in a transaction and rolled back after the test completes. This provides isolation between tests without requiring the entire database to be recreated for every test.</li>
+<li>The test database must still have the expected schema. When migrations or schema-related configuration change, you may need to prepare or rebuild the test database.</li>
+</ul>
+<pre><code class="language-bash"># Rebuild the test database schema (if you modified migrations)
+bundle exec rails db:test:prepare
+
+# Or, explicitly drop and recreate it
+RAILS_ENV=test bundle exec rails db:drop db:create db:schema:load
+</code></pre>
+<h3 id="19-running-tests">1.9 Running Tests</h3>
+<h4 id="run-all-tests">Run all tests:</h4>
+<pre><code class="language-bash">bundle exec rspec
+</code></pre>
+<h4 id="run-a-specific-file">Run a specific file:</h4>
+<pre><code class="language-bash">bundle exec rspec spec/models/vehicle_spec.rb
+</code></pre>
+<h4 id="run-a-specific-line-test-case">Run a specific line (test case):</h4>
+<pre><code class="language-bash">bundle exec rspec spec/models/vehicle_spec.rb:25
+</code></pre>
+<h4 id="run-all-tests-matching-a-pattern">Run all tests matching a pattern:</h4>
+<pre><code class="language-bash">bundle exec rspec --pattern &quot;*projection*&quot;
+</code></pre>
+<h4 id="run-only-one-type-of-test">Run only one type of test:</h4>
+<pre><code class="language-bash">bundle exec rspec spec/models/           # Only model tests
+bundle exec rspec spec/requests/         # Only integration tests
+bundle exec rspec spec/jobs/             # Only job tests
+bundle exec rspec spec/system/           # Only system tests
+</code></pre>
+<h4 id="run-tests-with-verbose-output">Run tests with verbose output:</h4>
+<pre><code class="language-bash">bundle exec rspec --format documentation
+</code></pre>
+<h4 id="run-with-coverage">Run with coverage:</h4>
+<pre><code class="language-bash">COVERAGE=true bundle exec rspec
+</code></pre>
+<h4 id="run-in-parallel-if-you-install-the-parallel_tests-gem">Run in parallel (if you install the <code>parallel_tests</code> gem):</h4>
+<pre><code class="language-bash">bundle exec parallel_test spec/
+</code></pre>
+<h3 id="110-configuration-in-rspec">1.10 Configuration in <code>.rspec</code></h3>
+<p>The <code>.rspec</code> file sets default options for the <code>rspec</code> command:</p>
+<pre><code>--require spec_helper
+--format progress
+--color
+--order random
+</code></pre>
+<ul>
+<li><code>--require spec_helper</code>: Always load spec_helper before running tests</li>
+<li><code>--format progress</code>: Show a dot for each passing test, F for failures (can be <code>documentation</code> for verbose names)</li>
+<li><code>--color</code>: Colorize output</li>
+<li><code>--order random</code>: Run tests in random order (catches tests that accidentally depend on order)</li>
+</ul>
+<h3 id="111-cicd-integration">1.11 CI/CD Integration</h3>
+<p>Before merging any code, tests should run automatically. In your CI (GitHub Actions, CircleCI, etc.):</p>
+<pre><code class="language-yaml"># .github/workflows/tests.yml (GitHub Actions example)
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:YOUR_POSTGRES_VERSION
+        env:
+          POSTGRES_PASSWORD: postgres
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 'YOUR_PROJECT_RUBY_VERSION'
+          bundler-cache: true
+
+      - run: bundle exec rails db:test:prepare
+      - run: bundle exec rspec
+      - run: bundle exec rubocop  # Optional: static code quality
+</code></pre>
+<p>This ensures:
+- Tests run on every push and pull request
+- When configured as a required status check, failing tests can prevent a PR from being merged
+- Developers get immediate feedback</p>
+<h3 id="112-debugging-tests">1.12 Debugging Tests</h3>
+<h4 id="see-actual-vs-expected-values">See actual vs. expected values:</h4>
+<pre><code class="language-ruby">expect(actual).to eq(expected)  # Shows diff if not equal
+</code></pre>
+<h4 id="add-debug-output-to-tests">Add debug output to tests:</h4>
+<pre><code class="language-ruby">it &quot;does something&quot; do
+  result = some_method
+  pp result  # Pretty-print the result
+  puts result.inspect
+  expect(result).to eq(expected)
+end
+</code></pre>
+<h4 id="use-a-debugger-within-tests">Use a debugger within tests:</h4>
+<pre><code class="language-ruby">it &quot;does something&quot; do
+  result = some_method
+  binding.pry  # Execution pauses here; inspect variables, call methods
+  expect(result).to eq(expected)
+end
+</code></pre>
+<p>Then run the test with:</p>
+<pre><code class="language-bash">bundle exec rspec spec/models/vehicle_spec.rb
+</code></pre>
+<p>When execution reaches <code>binding.pry</code>, the test process pauses and opens a Pry session.</p>
+<h4 id="see-what-sql-is-being-executed">See what SQL is being executed:</h4>
+<pre><code class="language-ruby">it &quot;queries the database efficiently&quot; do
+  expect {
+    Vehicle.find_by(registration_number: 'KA01AB1234')
+  }.not_to exceed_query_limit(1)  # Requires rspec-rails and should_not gem
+end
+</code></pre>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
